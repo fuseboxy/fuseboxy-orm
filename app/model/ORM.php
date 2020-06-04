@@ -306,7 +306,7 @@ class ORM {
 			return false;
 		}
 		// done!
-		return true;
+		return $id;
 	}
 
 
