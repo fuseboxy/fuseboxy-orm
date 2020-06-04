@@ -164,6 +164,59 @@ class ORM {
 	/**
 	<fusedoc>
 		<description>
+			delete specific record
+		</description>
+		<io>
+			<in>
+				<object name="$bean" />
+			</in>
+			<out>
+				<boolean name="~return~" />
+			</out>
+		</io>
+	</fusedoc>
+	*/
+	public static function delete($bean) {
+		try {
+			R::trash($bean);
+		} catch (Exception $e) {
+			self::$error = $e->getMessage();
+			return false;
+		}
+		// done!
+		return true;
+	}
+
+
+
+
+	/**
+	<fusedoc>
+		<description>
+			obtain first record according to the criteria
+		</description>
+		<io>
+			<in>
+				<string name="$beanType" />
+				<string name="$sql" />
+				<array name="$param" />
+			</in>
+			<out>
+				<object name="~return~" />
+			</out>
+		</io>
+	</fusedoc>
+	*/
+	public static function first($beanType, $sql='', $param=array()) {
+		return R::findOne($beanType, $sql, $param);
+	}
+
+
+
+
+	/**
+	<fusedoc>
+		<description>
 			obtain specific record according to ID, or...
 			obtain multiple records according to criteria
 		</description>
@@ -206,30 +259,6 @@ class ORM {
 	/**
 	<fusedoc>
 		<description>
-			obtain first record according to the criteria
-		</description>
-		<io>
-			<in>
-				<string name="$beanType" />
-				<string name="$sql" />
-				<array name="$param" />
-			</in>
-			<out>
-				<object name="~return~" />
-			</out>
-		</io>
-	</fusedoc>
-	*/
-	public static function first($beanType, $sql='', $param=array()) {
-		return R::findOne($beanType, $sql, $param);
-	}
-
-
-
-
-	/**
-	<fusedoc>
-		<description>
 			create empty new container (preload data when specified)
 		</description>
 		<io>
@@ -256,27 +285,35 @@ class ORM {
 	/**
 	<fusedoc>
 		<description>
-			delete specific record
+			run sql statement
 		</description>
 		<io>
 			<in>
-				<object name="$bean" />
+				<string name="$sql" />
+				<array name="$param" optional="yes" />
 			</in>
 			<out>
-				<boolean name="~return~" />
+				<!-- select -->
+				<array name="~return~">
+					<structure name="+" />
+				</array>
+				<!-- insert / update / delete -->
+				<number name="~return~" comments="number of affected records; zero affected row does not mean error" />
 			</out>
 		</io>
 	</fusedoc>
 	*/
-	public static function delete($bean) {
+	public static function query($sql, $param=array()) {
+		$sql = trim($sql);
+		// run method according to nature of query
 		try {
-			R::trash($bean);
+			$result = ( stripos($sql, 'SELECT') == 0 ) ? R::getAll($sql, $param) : R::exec($sql, $param);
 		} catch (Exception $e) {
 			self::$error = $e->getMessage();
 			return false;
 		}
 		// done!
-		return true;
+		return $result;
 	}
 
 
@@ -310,68 +347,9 @@ class ORM {
 	}
 
 
-
-
-	/**
-	<fusedoc>
-		<description>
-		</description>
-		<io>
-			<in>
-				<string name="$sql" />
-				<array name="$param" optional="yes" />
-			</in>
-			<out>
-			</out>
-		</io>
-	</fusedoc>
-	*/
-	public static function runSQL($sql, $param=array()) {
-
-	}
-
-
-
-
-	/**
-	<fusedoc>
-		<description>
-		</description>
-		<io>
-			<in>
-			</in>
-			<out>
-			</out>
-		</io>
-	</fusedoc>
-	*/
-	public static function getCell() {
-
-	}
-
-
-
-
-	/**
-	<fusedoc>
-		<description>
-		</description>
-		<io>
-			<in>
-			</in>
-			<out>
-			</out>
-		</io>
-	</fusedoc>
-	*/
-	public static function getRow() {
-
-	}
-
-
 } // class
 
 
 
-// connect to database immedicately
+// connect to database right away
 ORM::connectDB();
