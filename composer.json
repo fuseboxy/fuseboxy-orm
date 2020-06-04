@@ -1,0 +1,7 @@
+{
+	"name": "fuseboxy/fuseboxy-orm",
+	"description": "Fuseboxy ORM",
+	"license": "MIT",
+	"type": "fuseboxy-module",
+	"require": { "fuseboxy/fuseboxy-installer": "*" }
+}
