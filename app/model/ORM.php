@@ -2,12 +2,13 @@
 class ORM {
 
 
-	// library
-	public static $libPath = array(
-		'connectDB' => __DIR__.'/../../lib/redbeanphp/5.3.1/rb.php'
-	);
+	// properties
+	private static $libPath = array('connectDB' => __DIR__.'/../../lib/redbeanphp/5.3.1/rb.php');
+	private static $status = 0;
 
 
+	// define constant
+	const DB_CONNECTED = 1;
 
 
 	// get (latest) error message
@@ -42,41 +43,44 @@ class ORM {
 	</fusedoc>
 	*/
 	private static function connectDB() {
-		// load library
-		$path = self::$libPath['connectDB'];
-		if ( !is_file($path) ) {
-			self::$error = "RedBeanPHP library is missing ({$path})";
-			return false;
-		}
-		require_once($path);
-		// check config
-		$dbConfig = F::config('db');
-		if ( empty($dbConfig) ) {
-			self::$error = 'Database config is missing';
-			return false;
-		} elseif ( empty($dbConfig['host']) ) {
-			self::$error = 'Database config [host] is required';
-			return false;
-		} elseif ( empty($dbConfig['name']) ) {
-			self::$error = 'Database config [name] is required';
-			return false;
-		} elseif ( empty($dbConfig['username']) ) {
-			self::$error = 'Database config [username] is required';
-			return false;
-		// allow empty password but must be defined
-		} elseif ( !isset($dbConfig['password']) ) {
-			self::$error = 'Database config [password] is required';
-			return false;
-		}
-		// default config
-		if ( empty($dbConfig['provider']) ) $dbConfig['provider'] = 'mysql';
-		// connect to database
-		try {
-			R::setup($dbConfig['provider'].':host='.$dbConfig['host'].';dbname='.$dbConfig['name'], $dbConfig['username'], $dbConfig['password']);
-			if ( isset($dbConfig['freeze']) ) R::freeze($dbConfig['freeze']);
-		} catch (Exception $e) {
-			self::$error = $e->getMessage();
-			return false;
+		// check status
+		if ( self::$status != self::DB_CONNECTED ) {
+			// load library
+			$path = self::$libPath['connectDB'];
+			if ( !is_file($path) ) {
+				self::$error = "RedBeanPHP library is missing ({$path})";
+				return false;
+			}
+			require_once($path);
+			// check config
+			$dbConfig = F::config('db');
+			if ( empty($dbConfig) ) {
+				self::$error = 'Database config is missing';
+				return false;
+			} elseif ( empty($dbConfig['host']) ) {
+				self::$error = 'Database config [host] is required';
+				return false;
+			} elseif ( empty($dbConfig['name']) ) {
+				self::$error = 'Database config [name] is required';
+				return false;
+			} elseif ( empty($dbConfig['username']) ) {
+				self::$error = 'Database config [username] is required';
+				return false;
+			// allow empty password but must be defined
+			} elseif ( !isset($dbConfig['password']) ) {
+				self::$error = 'Database config [password] is required';
+				return false;
+			}
+			// default config
+			if ( empty($dbConfig['provider']) ) $dbConfig['provider'] = 'mysql';
+			// connect to database
+			try {
+				R::setup($dbConfig['provider'].':host='.$dbConfig['host'].';dbname='.$dbConfig['name'], $dbConfig['username'], $dbConfig['password']);
+				if ( isset($dbConfig['freeze']) ) R::freeze($dbConfig['freeze']);
+			} catch (Exception $e) {
+				self::$error = $e->getMessage();
+				return false;
+			}
 		}
 		// done!
 		return true;
