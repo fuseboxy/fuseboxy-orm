@@ -26,6 +26,7 @@ class ORM {
 			<in>
 				<structure name="config" scope="$fusebox">
 					<structure name="db">
+						<string name="provider" optional="yes" default="mysql" />
 						<string name="host" />
 						<string name="name" />
 						<string name="username" />
@@ -67,9 +68,11 @@ class ORM {
 			self::$error = 'Database config [password] is required';
 			return false;
 		}
+		// default config
+		if ( empty($dbConfig['provider']) ) $dbConfig['provider'] = 'mysql';
 		// connect to database
 		try {
-			R::setup('mysql:host='.$dbConfig['host'].';dbname='.$dbConfig['name'], $dbConfig['username'], $dbConfig['password']);
+			R::setup($dbConfig['provider'].':host='.$dbConfig['host'].';dbname='.$dbConfig['name'], $dbConfig['username'], $dbConfig['password']);
 			if ( isset($dbConfig['freeze']) ) R::freeze($dbConfig['freeze']);
 		} catch (Exception $e) {
 			self::$error = $e->getMessage();
@@ -100,6 +103,8 @@ class ORM {
 	</fusedoc>
 	*/
 	public static function all($beanType) {
+		if ( self::connectDB() === false ) return false;
+		// done!
 		return R::findAll($beanType);
 	}
 
@@ -124,6 +129,7 @@ class ORM {
 	</fusedoc>
 	*/
 	public static function columns($beanType) {
+		if ( self::connectDB() === false ) return false;
 		try {
 			$result = R::getColumns($beanType);
 		} catch (Exception $e) {
@@ -155,6 +161,8 @@ class ORM {
 	</fusedoc>
 	*/
 	public static function count($beanType, $sql=null, $param=null) {
+		if ( self::connectDB() === false ) return false;
+		// done!
 		return R::count($beanType, $sql, $param);
 	}
 
@@ -185,6 +193,7 @@ class ORM {
 	</fusedoc>
 	*/
 	public static function get($beanType, $sqlOrID=null, $param=null) {
+		if ( self::connectDB() === false ) return false;
 		// get multiple records
 		if ( !is_numeric($sqlOrID) ) {
 			$result = R::find($beanType, $sqlOrID, $param);
@@ -221,6 +230,8 @@ class ORM {
 	</fusedoc>
 	*/
 	public static function first($beanType, $sql=null, $param=null) {
+		if ( self::connectDB() === false ) return false;
+		// done!
 		return R::findOne($beanType, $sql, $param);
 	}
 
@@ -243,8 +254,11 @@ class ORM {
 	</fusedoc>
 	*/
 	public static function new($beanType, $data=null) {
+		if ( self::connectDB() === false ) return false;
+		// create container
 		$bean = R::dispense($beanType);
 		if ( !empty($data) ) $bean->import($data);
+		// done!
 		return $bean;
 	}
 
@@ -267,6 +281,7 @@ class ORM {
 	</fusedoc>
 	*/
 	public static function delete($bean) {
+		if ( self::connectDB() === false ) return false;
 		try {
 			R::trash($bean);
 		} catch (Exception $e) {
@@ -296,6 +311,8 @@ class ORM {
 	</fusedoc>
 	*/
 	public static function save($bean) {
+		if ( self::connectDB() === false ) return false;
+		// save record
 		$id = R::store($bean);
 		// validation
 		if ( empty($id) ) {
@@ -324,6 +341,7 @@ class ORM {
 	</fusedoc>
 	*/
 	public static function runSQL($sql, $param=null) {
+		if ( self::connectDB() === false ) return false;
 
 	}
 
@@ -343,6 +361,7 @@ class ORM {
 	</fusedoc>
 	*/
 	public static function getCell() {
+		if ( self::connectDB() === false ) return false;
 
 	}
 
@@ -362,6 +381,7 @@ class ORM {
 	</fusedoc>
 	*/
 	public static function getRow() {
+		if ( self::connectDB() === false ) return false;
 
 	}
 
