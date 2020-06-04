@@ -154,7 +154,7 @@ class ORM {
 		</io>
 	</fusedoc>
 	*/
-	public static function count($beanType, $sql=null, $param=null) {
+	public static function count($beanType, $sql='', $param=array()) {
 		return R::count($beanType, $sql, $param);
 	}
 
@@ -184,7 +184,7 @@ class ORM {
 		</io>
 	</fusedoc>
 	*/
-	public static function get($beanType, $sqlOrID=null, $param=null) {
+	public static function get($beanType, $sqlOrID='', $param=array()) {
 		// get multiple records
 		if ( !is_numeric($sqlOrID) ) {
 			$result = R::find($beanType, $sqlOrID, $param);
@@ -220,7 +220,7 @@ class ORM {
 		</io>
 	</fusedoc>
 	*/
-	public static function first($beanType, $sql=null, $param=null) {
+	public static function first($beanType, $sql='', $param=array()) {
 		return R::findOne($beanType, $sql, $param);
 	}
 
@@ -242,7 +242,7 @@ class ORM {
 		</io>
 	</fusedoc>
 	*/
-	public static function new($beanType, $data=null) {
+	public static function new($beanType, $data=array()) {
 		// create container
 		$bean = R::dispense($beanType);
 		if ( !empty($data) ) $bean->import($data);
@@ -326,7 +326,7 @@ class ORM {
 		</io>
 	</fusedoc>
 	*/
-	public static function runSQL($sql, $param=null) {
+	public static function runSQL($sql, $param=array()) {
 
 	}
 
