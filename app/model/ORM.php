@@ -3,7 +3,7 @@ class ORM {
 
 
 	// library
-	private static $libPath = array('connectDB' => __DIR__.'/../../lib/redbeanphp/5.3.1/rb.php');
+	private static $libPath = array('init' => __DIR__.'/../../lib/redbeanphp/5.3.1/rb.php');
 
 
 	// get (latest) error message
@@ -37,9 +37,9 @@ class ORM {
 		</io>
 	</fusedoc>
 	*/
-	public static function connectDB() {
+	public static function init() {
 		// load library
-		$path = self::$libPath['connectDB'];
+		$path = self::$libPath['init'];
 		if ( !is_file($path) ) {
 			self::$error = "RedBeanPHP library is missing ({$path})";
 			return false;
@@ -352,4 +352,4 @@ class ORM {
 
 
 // connect to database right away
-ORM::connectDB();
+ORM::init();
