@@ -347,6 +347,30 @@ class ORM {
 	}
 
 
+
+
+	/**
+	<fusedoc>
+		<description>
+			generate slots for query paramters
+		</description>
+		<io>
+			<in>
+				<array name="$param" />
+			</in>
+			<out>
+				<list name="~return~" delim=",">
+					<string value="?" />
+				</list>
+			</out>
+		</io>
+	</fusedoc>
+	*/
+	public static function slots($param) {
+		return implode(',', array_fill(0, count($param), '?'));
+	}
+
+
 } // class
 
 
