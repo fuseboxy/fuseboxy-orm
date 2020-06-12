@@ -352,4 +352,4 @@ class ORM {
 
 
 // connect to database right away
-ORM::init();
+if ( ORM::init() === false ) die( ORM::error() );
