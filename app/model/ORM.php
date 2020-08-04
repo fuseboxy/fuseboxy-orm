@@ -272,9 +272,14 @@ class ORM {
 	</fusedoc>
 	*/
 	public static function new($beanType, $data=array()) {
-		// create container
-		$bean = R::dispense($beanType);
-		if ( !empty($data) ) $bean->import($data);
+		// create container & import data
+		try {
+			$bean = R::dispense($beanType);
+			if ( !empty($data) ) $bean->import($data);
+		} catch (Exception $e) {
+			self::$error = $e->getMessage();
+			return false;
+		}
 		// done!
 		return $bean;
 	}
@@ -336,7 +341,12 @@ class ORM {
 	*/
 	public static function save($bean) {
 		// save record
-		$id = R::store($bean);
+		try {
+			$id = R::store($bean);
+		} catch (Exception $e) {
+			self::$error = $e->getMessage();
+			return false;
+		}
 		// validation
 		if ( empty($id) ) {
 			self::$error = empty($bean->id) ? 'Error occurred while creating record' : "Error occurred while updating record (id={$bean->id})";
