@@ -90,6 +90,7 @@ class ORM {
 		<io>
 			<in>
 				<string name="$beanType" />
+				<string name="$sql" />
 			</in>
 			<out>
 				<structure name="~return~">
@@ -99,8 +100,8 @@ class ORM {
 		</io>
 	</fusedoc>
 	*/
-	public static function all($beanType) {
-		return R::findAll($beanType);
+	public static function all($beanType, $sql='ORDER BY id') {
+		return R::findAll($beanType, $sql);
 	}
 
 
