@@ -386,5 +386,12 @@ class ORM {
 
 
 
+
+// alias class
+class O extends ORM {}
+
+
+
+
 // connect to database right away
 if ( ORM::init() === false ) die( ORM::error() );
