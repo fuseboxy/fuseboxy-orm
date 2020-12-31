@@ -155,7 +155,7 @@ class ORM {
 		</io>
 	</fusedoc>
 	*/
-	public static function count($beanType, $sql='', $param=array()) {
+	public static function count($beanType, $sql='', $param=[]) {
 		return R::count($beanType, $sql, $param);
 	}
 
@@ -208,7 +208,7 @@ class ORM {
 		</io>
 	</fusedoc>
 	*/
-	public static function first($beanType, $sql='', $param=array()) {
+	public static function first($beanType, $sql='', $param=[]) {
 		return R::findOne($beanType, $sql, $param);
 	}
 
@@ -238,7 +238,7 @@ class ORM {
 		</io>
 	</fusedoc>
 	*/
-	public static function get($beanType, $sqlOrID='', $param=array()) {
+	public static function get($beanType, $sqlOrID='', $param=[]) {
 		// get multiple records
 		if ( !is_numeric($sqlOrID) ) {
 			$result = R::find($beanType, $sqlOrID, $param);
@@ -272,7 +272,7 @@ class ORM {
 		</io>
 	</fusedoc>
 	*/
-	public static function new($beanType, $data=array()) {
+	public static function new($beanType, $data=[]) {
 		// create container & import data
 		try {
 			$bean = R::dispense($beanType);
@@ -309,7 +309,7 @@ class ORM {
 		</io>
 	</fusedoc>
 	*/
-	public static function query($sql, $param=array()) {
+	public static function query($sql, $param=[]) {
 		$sql = trim($sql);
 		// run method according to nature of query
 		try {
@@ -321,6 +321,8 @@ class ORM {
 		// done!
 		return $result;
 	}
+	// alias method
+	public static function run($sql, $param=[]) { return self::query($sql, $param); }
 
 
 
