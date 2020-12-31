@@ -2,7 +2,8 @@
 class ORM {
 
 
-	// library
+	// properties
+	private static $isReady = false;
 	private static $libPath = array('init' => __DIR__.'/../../lib/redbeanphp/5.3.1/rb.php');
 
 
@@ -38,6 +39,8 @@ class ORM {
 	</fusedoc>
 	*/
 	public static function init() {
+		// check status
+		if ( self::$isReady ) return true;
 		// load library
 		$path = self::$libPath['init'];
 		if ( !is_file($path) ) {
@@ -75,6 +78,8 @@ class ORM {
 			self::$error = $e->getMessage();
 			return false;
 		}
+		// mark status
+		self::$isReady = true;
 		// done!
 		return true;
 	}
@@ -101,6 +106,7 @@ class ORM {
 	</fusedoc>
 	*/
 	public static function all($beanType, $sql='ORDER BY id') {
+		if ( self::init() === false ) return false;
 		return R::findAll($beanType, $sql);
 	}
 
@@ -125,6 +131,8 @@ class ORM {
 	</fusedoc>
 	*/
 	public static function columns($beanType) {
+		if ( self::init() === false ) return false;
+		// proceed
 		try {
 			$result = R::getColumns($beanType);
 		} catch (Exception $e) {
@@ -156,6 +164,7 @@ class ORM {
 	</fusedoc>
 	*/
 	public static function count($beanType, $sql='', $param=[]) {
+		if ( self::init() === false ) return false;
 		return R::count($beanType, $sql, $param);
 	}
 
@@ -178,6 +187,8 @@ class ORM {
 	</fusedoc>
 	*/
 	public static function delete($bean) {
+		if ( self::init() === false ) return false;
+		// proceed
 		try {
 			R::trash($bean);
 		} catch (Exception $e) {
@@ -209,6 +220,7 @@ class ORM {
 	</fusedoc>
 	*/
 	public static function first($beanType, $sql='', $param=[]) {
+		if ( self::init() === false ) return false;
 		return R::findOne($beanType, $sql, $param);
 	}
 
@@ -239,6 +251,7 @@ class ORM {
 	</fusedoc>
 	*/
 	public static function get($beanType, $sqlOrID='', $param=[]) {
+		if ( self::init() === false ) return false;
 		// get multiple records
 		if ( !is_numeric($sqlOrID) ) {
 			$result = R::find($beanType, $sqlOrID, $param);
@@ -273,6 +286,7 @@ class ORM {
 	</fusedoc>
 	*/
 	public static function new($beanType, $data=[]) {
+		if ( self::init() === false ) return false;
 		// create container & import data
 		try {
 			$bean = R::dispense($beanType);
@@ -310,9 +324,10 @@ class ORM {
 	</fusedoc>
 	*/
 	public static function query($sql, $param=[]) {
-		$sql = trim($sql);
+		if ( self::init() === false ) return false;
 		// run method according to nature of query
 		try {
+			$sql = trim($sql);
 			$result = ( stripos($sql, 'SELECT') == 0 ) ? R::getAll($sql, $param) : R::exec($sql, $param);
 		} catch (Exception $e) {
 			self::$error = $e->getMessage();
@@ -343,6 +358,7 @@ class ORM {
 	</fusedoc>
 	*/
 	public static function save($bean) {
+		if ( self::init() === false ) return false;
 		// save record
 		try {
 			$id = R::store($bean);
@@ -391,9 +407,3 @@ class ORM {
 
 // alias class
 class O extends ORM {}
-
-
-
-
-// connect to database right away
-if ( ORM::init() === false ) die( ORM::error() );
