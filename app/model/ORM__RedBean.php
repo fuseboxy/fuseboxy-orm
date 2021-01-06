@@ -89,24 +89,7 @@ class ORM__RedBean {
 
 
 
-	/**
-	<fusedoc>
-		<description>
-			get all records (sort by id)
-		</description>
-		<io>
-			<in>
-				<string name="$beanType" />
-				<string name="$sql" />
-			</in>
-			<out>
-				<structure name="~return~">
-					<object name="~id~" />
-				</structure>
-			</out>
-		</io>
-	</fusedoc>
-	*/
+	// get all records
 	public static function all($beanType, $sql) {
 		if ( self::init() === false ) return false;
 		return R::findAll($beanType, $sql);
@@ -115,23 +98,7 @@ class ORM__RedBean {
 
 
 
-	/**
-	<fusedoc>
-		<description>
-			get columns of specific table
-		</description>
-		<io>
-			<in>
-				<string name="$beanType" />
-			</in>
-			<out>
-				<array name="~return~">
-					<string name="+" />
-				</array>
-			</out>
-		</io>
-	</fusedoc>
-	*/
+	// get columns of specific table
 	public static function columns($beanType) {
 		if ( self::init() === false ) return false;
 		// proceed
@@ -148,23 +115,7 @@ class ORM__RedBean {
 
 
 
-	/**
-	<fusedoc>
-		<description>
-			count number of records accorrding to criteria (if any)
-		</description>
-		<io>
-			<in>
-				<string name="$beanType" />
-				<string name="$sql" />
-				<string name="$param" />
-			</in>
-			<out>
-				<number name="~return~" />
-			</out>
-		</io>
-	</fusedoc>
-	*/
+	// count number of records accorrding to criteria
 	public static function count($beanType, $sql, $param) {
 		if ( self::init() === false ) return false;
 		return R::count($beanType, $sql, $param);
@@ -173,21 +124,7 @@ class ORM__RedBean {
 
 
 
-	/**
-	<fusedoc>
-		<description>
-			delete specific record
-		</description>
-		<io>
-			<in>
-				<object name="$bean" />
-			</in>
-			<out>
-				<boolean name="~return~" />
-			</out>
-		</io>
-	</fusedoc>
-	*/
+	// delete specific record
 	public static function delete($bean) {
 		if ( self::init() === false ) return false;
 		// proceed
@@ -204,23 +141,7 @@ class ORM__RedBean {
 
 
 
-	/**
-	<fusedoc>
-		<description>
-			obtain first record according to the criteria
-		</description>
-		<io>
-			<in>
-				<string name="$beanType" />
-				<string name="$sql" />
-				<array name="$param" />
-			</in>
-			<out>
-				<object name="~return~" />
-			</out>
-		</io>
-	</fusedoc>
-	*/
+	// obtain first record according to the criteria
 	public static function first($beanType, $sql, $param) {
 		if ( self::init() === false ) return false;
 		return R::findOne($beanType, $sql, $param);
@@ -229,29 +150,8 @@ class ORM__RedBean {
 
 
 
-	/**
-	<fusedoc>
-		<description>
-			obtain specific record according to ID, or...
-			obtain multiple records according to criteria
-		</description>
-		<io>
-			<in>
-				<string name="$beanType" />
-				<string_or_number name="$sqlOrID" />
-				<array name="$param" />
-			</in>
-			<out>
-				<!-- single record -->
-				<object name="~return~" optional="yes" />
-				<!-- multiple records -->
-				<structure name="~return~" optional="yes">
-					<object name="~id~" />
-				</structure>
-			</out>
-		</io>
-	</fusedoc>
-	*/
+	// obtain specific record according to ID, or...
+	// obtain multiple records according to criteria
 	public static function get($beanType, $sqlOrID, $param) {
 		if ( self::init() === false ) return false;
 		// get multiple records
@@ -272,21 +172,7 @@ class ORM__RedBean {
 
 
 
-	/**
-	<fusedoc>
-		<description>
-			create empty new container (preload data when specified)
-		</description>
-		<io>
-			<in>
-				<string name="$beanType" />
-			</in>
-			<out>
-				<object name="~return~" />
-			</out>
-		</io>
-	</fusedoc>
-	*/
+	// create new container (preloaded with data)
 	public static function new($beanType, $data) {
 		if ( self::init() === false ) return false;
 		// create container & import data
@@ -304,27 +190,7 @@ class ORM__RedBean {
 
 
 
-	/**
-	<fusedoc>
-		<description>
-			run sql statement
-		</description>
-		<io>
-			<in>
-				<string name="$sql" />
-				<array name="$param" optional="yes" />
-			</in>
-			<out>
-				<!-- select -->
-				<array name="~return~">
-					<structure name="+" />
-				</array>
-				<!-- insert / update / delete -->
-				<number name="~return~" comments="number of affected records; zero affected row does not mean error" />
-			</out>
-		</io>
-	</fusedoc>
-	*/
+	// run sql statement
 	public static function query($sql, $param) {
 		if ( self::init() === false ) return false;
 		// run method according to nature of query
@@ -342,21 +208,7 @@ class ORM__RedBean {
 
 
 
-	/**
-	<fusedoc>
-		<description>
-			save object into database
-		</description>
-		<io>
-			<in>
-				<object name="$bean" />
-			</in>
-			<out>
-				<number name="~return~" comments="id of record inserted/updated" />
-			</out>
-		</io>
-	</fusedoc>
-	*/
+	// save object into database
 	public static function save($bean) {
 		if ( self::init() === false ) return false;
 		// save record
