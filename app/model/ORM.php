@@ -35,8 +35,8 @@ class ORM {
 		if ( empty($method) ) {
 			self::$error = 'Method name is required';
 			return false;
-		} elseif ( !method_exists($class, $method)) ) {
-			self::$error "Method <em>{$class}::{$method}()</em> not exists";
+		} elseif ( !method_exists($class, $method) ) {
+			self::$error = "Method <em>{$class}::{$method}()</em> not exists";
 			return false;
 		}
 		// call method with arguments
@@ -161,7 +161,6 @@ class ORM {
 	</fusedoc>
 	*/
 	public static function first($beanType, $sql='', $param=[]) { return self::invoke(__FUNCTION__, $beanType, $sql, $param); }
-	// alias method
 	public static function one($beanType, $sql='', $param=[]) { return self::first($beanType, $sql, $param); }
 
 
@@ -236,8 +235,7 @@ class ORM {
 		</io>
 	</fusedoc>
 	*/
-	public static function query($sql, $param=[]) { return self::invoke(__FUNCTION__, $param); }
-	// alias method
+	public static function query($sql, $param=[]) { return self::invoke(__FUNCTION__, $sql, $param); }
 	public static function run($sql, $param=[]) { return self::query($sql, $param); }
 
 
