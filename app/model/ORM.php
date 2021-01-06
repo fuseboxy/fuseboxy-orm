@@ -2,12 +2,6 @@
 class ORM {
 
 
-	// default vendor
-	private static $vendor  = 'redbean';
-
-
-
-
 	// get (latest) error message
 	private static $error;
 	public static function error() { return self::$error; }
@@ -16,6 +10,7 @@ class ORM {
 
 
 	// get or set vendor
+	private static $vendor = 'redbean';
 	public static function vendor($name=null) {
 		if ( empty($name) ) return self::$vendor;
 		self::$vendor = strtolower($name);
