@@ -4,12 +4,6 @@ class ORM {
 
 	// default vendor
 	private static $vendor  = 'redbean';
-	// get & set vendor
-	public static function vendor($name=null) {
-		if ( empty($name) ) return self::$vendor;
-		self::$vendor = strtolower($name);
-		return true;
-	}
 
 
 
@@ -21,7 +15,17 @@ class ORM {
 
 
 
-	// call method of corresponding vendor class
+	// get or set vendor
+	public static function vendor($name=null) {
+		if ( empty($name) ) return self::$vendor;
+		self::$vendor = strtolower($name);
+		return true;
+	}
+
+
+
+
+	// invoke method of corresponding vendor class
 	// ===> with dynamic number of arguments (max 9)
 	private static function invoke() {
 		$args = func_get_args();
@@ -75,9 +79,7 @@ class ORM {
 		</io>
 	</fusedoc>
 	*/
-	public static function all($beanType, $sql='ORDER BY id') {
-		return self::invoke(__FUNCTION__, $beanType, $sql);
-	}
+	public static function all($beanType, $sql='ORDER BY id') { return self::invoke(__FUNCTION__, $beanType, $sql); }
 
 
 
@@ -99,9 +101,7 @@ class ORM {
 		</io>
 	</fusedoc>
 	*/
-	public static function columns($beanType) {
-		return self::invoke(__FUNCTION__, $beanType);
-	}
+	public static function columns($beanType) { return self::invoke(__FUNCTION__, $beanType); }
 
 
 
@@ -123,9 +123,7 @@ class ORM {
 		</io>
 	</fusedoc>
 	*/
-	public static function count($beanType, $sql='', $param=[]) {
-		return self::invoke(__FUNCTION__, $beanType, $sql, $param);
-	}
+	public static function count($beanType, $sql='', $param=[]) { return self::invoke(__FUNCTION__, $beanType, $sql, $param); }
 
 
 
@@ -145,9 +143,7 @@ class ORM {
 		</io>
 	</fusedoc>
 	*/
-	public static function delete($bean) {
-		return self::invoke(__FUNCTION__, $bean);
-	}
+	public static function delete($bean) { return self::invoke(__FUNCTION__, $bean); }
 
 
 
@@ -169,9 +165,9 @@ class ORM {
 		</io>
 	</fusedoc>
 	*/
-	public static function first($beanType, $sql='', $param=[]) {
-		return self::invoke(__FUNCTION__, $beanType, $sql, $param);
-	}
+	public static function first($beanType, $sql='', $param=[]) { return self::invoke(__FUNCTION__, $beanType, $sql, $param); }
+	// alias method
+	public static function one($beanType, $sql='', $param=[]) { return self::first($beanType, $sql, $param); }
 
 
 
@@ -199,9 +195,7 @@ class ORM {
 		</io>
 	</fusedoc>
 	*/
-	public static function get($beanType, $sqlOrID='', $param=[]) {
-		return self::invoke(__FUNCTION__, $beanType, $sqlOrID, $param);
-	}
+	public static function get($beanType, $sqlOrID='', $param=[]) { return self::invoke(__FUNCTION__, $beanType, $sqlOrID, $param); }
 
 
 
@@ -221,9 +215,7 @@ class ORM {
 		</io>
 	</fusedoc>
 	*/
-	public static function new($beanType, $data=[]) {
-		return self::invoke(__FUNCTION__, $beanType, $data);
-	}
+	public static function new($beanType, $data=[]) { return self::invoke(__FUNCTION__, $beanType, $data); }
 
 
 
@@ -249,13 +241,9 @@ class ORM {
 		</io>
 	</fusedoc>
 	*/
-	public static function query($sql, $param=[]) {
-		return self::invoke(__FUNCTION__, $param);
-	}
+	public static function query($sql, $param=[]) { return self::invoke(__FUNCTION__, $param); }
 	// alias method
-	public static function run($sql, $param=[]) {
-		return self::query($sql, $param);
-	}
+	public static function run($sql, $param=[]) { return self::query($sql, $param); }
 
 
 
@@ -275,9 +263,7 @@ class ORM {
 		</io>
 	</fusedoc>
 	*/
-	public static function save($bean) {
-		return self::invoke(__FUNCTION__, $bean);
-	}
+	public static function save($bean) { return self::invoke(__FUNCTION__, $bean); }
 
 
 
@@ -299,9 +285,7 @@ class ORM {
 		</io>
 	</fusedoc>
 	*/
-	public static function slots($param) {
-		return implode(',', array_fill(0, count($param), '?'));
-	}
+	public static function slots($param) { return implode(',', array_fill(0, count($param), '?')); }
 
 
 } // class
