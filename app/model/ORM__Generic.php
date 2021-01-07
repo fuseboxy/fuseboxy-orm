@@ -145,7 +145,7 @@ class ORM__Generic implements ORM__Interface {
 			$sql .= ( stripos(trim($filterOrID), 'ORDER') === 0 ) ? $filterOrID : " WHERE {$filterOrID} ";
 			$data = self::query($sql, $param);
 			if ( $data === false ) return false;
-			foreach ( $data as $itemData ) $result[] = self::new($beanType, $itemData);
+			foreach ( $data as $row ) $result[ $row['id'] ] = self::new($beanType, $row);
 		}
 		// get specific record
 		$result = self::first($beanType, 'id = ?', [$filterOrID]);
@@ -185,7 +185,30 @@ class ORM__Generic implements ORM__Interface {
 
 	// run sql statement
 	public static function query($sql, $param) {
-
+		if ( self::init() === false ) return false;
+		// container
+		$result = array();
+		// prepare statement
+		$sql = trim($sql);
+		$query = @mysqli_prepare(self::$conn, $sql);
+		if ( !$query ) {
+			$err = error_get_last();
+			self::$error = "Error occurred while preparing statement : {$err['message']} ({$err['file']})";
+			return false;
+		}
+		// execute statement
+		$executed = @odbc_execute($query, $param);
+		if ( !$executed ) {
+			$err = error_get_last();
+			self::$error = "Error occurred while executing statement : {$err['message']} ({$err['file']})";
+			return false;
+		}
+		// obtain result according to operation
+		if ( stripos($sql, 'INSERT') === 0 ) $result = mysqli_insert_id();
+		if ( stripos($sql, 'SELECT') !== 0 ) $result = mysqli_affected_rows();
+		else while ( $row = mysqli_fetch_array($query) ) $result[] = $row;
+		// done!
+		return $result;
 	}
 
 
