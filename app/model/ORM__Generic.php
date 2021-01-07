@@ -72,12 +72,21 @@ class ORM__Generic implements ORM__Interface {
 
 	// get all records
 	public static function all($beanType, $order) {
-		return self::query("SELECT * FROM `{$beanType}` {$order}");
+		return self::query("SELECT * FROM `{$beanType}` {$order} ");
 	}
 
 
 	// get columns of specific table
 	public static function columns($beanType) {
+		$result = array();
+		// get column info
+		$sql = "SHOW COLUMNS FROM `{$beanType}` ";
+		$data = self::query($sql);
+		if ( $data === false ) return false;
+		// put into result
+		foreach ( $data as $item ) $result[] = $item['field'];
+		// done!
+		return $result;
 	}
 
 
