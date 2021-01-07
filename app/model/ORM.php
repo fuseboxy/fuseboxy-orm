@@ -13,63 +13,6 @@ class ORM implements ORM__Interface {
 	public static function vendor() { return self::$vendor; }
 
 
-
-
-	/**
-	<fusedoc>
-		<description>
-			invoke method of corresponding vendor class (with dynamic number of arguments)
-		</description>
-		<io>
-			<in />
-			<out>
-				<boolean name="~return~" />
-			</out>
-		</io>
-	</fusedoc>
-	*/
-	public static function invoke() {
-		$args = func_get_args();
-		// validate class
-		$class = __CLASS__.'__'.self::$vendor;
-		if ( !class_exists($class) ) {
-			self::$error = "Class [{$class}] not exists";
-			return false;
-		}
-		// validate method
-		$method = array_shift($args);
-		if ( empty($method) ) {
-			self::$error = 'Method name is required';
-			return false;
-		} elseif ( !method_exists($class, $method) ) {
-			self::$error = "Method [{$class}::{$method}] not exists";
-			return false;
-		}
-		// call method with arguments
-		switch ( count($args) ) {
-			case  0: $result = $class::$method(); break;
-			case  1: $result = $class::$method($args[0]); break;
-			case  2: $result = $class::$method($args[0], $args[1]); break;
-			case  3: $result = $class::$method($args[0], $args[1], $args[2]); break;
-			case  4: $result = $class::$method($args[0], $args[1], $args[2], $args[3]); break;
-			case  5: $result = $class::$method($args[0], $args[1], $args[2], $args[3], $args[4]); break;
-			case  6: $result = $class::$method($args[0], $args[1], $args[2], $args[3], $args[4], $args[5]); break;
-			case  7: $result = $class::$method($args[0], $args[1], $args[2], $args[3], $args[4], $args[5], $args[6]); break;
-			case  8: $result = $class::$method($args[0], $args[1], $args[2], $args[3], $args[4], $args[5], $args[6], $args[7]); break;
-			case  9: $result = $class::$method($args[0], $args[1], $args[2], $args[3], $args[4], $args[5], $args[6], $args[7], $args[8]); break;
-			default: self::$error = 'Please enhance [ORM::invoke] method to allow more arguments to pass through'; return false;
-		}
-		// validation
-		if ( $result === false ) {
-			self::$error = $class::error();
-			return false;
-		}
-		// done!
-		return $result;
-	}
-
-
-
 	/**
 	<fusedoc>
 		<description>
@@ -85,9 +28,8 @@ class ORM implements ORM__Interface {
 	*/
 	public static function init($vendor=null) {
 		if ( !empty($vendor) ) self::$vendor = $vendor;
-		return self::invoke(__FUNCTION__);
+		return call_user_func(__CLASS__.'__'.self::$vendor.'::'.__FUNCTION__);
 	}
-
 
 
 	/**
@@ -109,10 +51,8 @@ class ORM implements ORM__Interface {
 	</fusedoc>
 	*/
 	public static function all($beanType, $sql='ORDER BY id') {
-		return self::invoke(__FUNCTION__, $beanType, $sql);
+		return call_user_func(__CLASS__.'__'.self::$vendor.'::'.__FUNCTION__, $beanType, $sql);
 	}
-
-
 
 
 	/**
@@ -133,10 +73,8 @@ class ORM implements ORM__Interface {
 	</fusedoc>
 	*/
 	public static function columns($beanType) {
-		return self::invoke(__FUNCTION__, $beanType);
+		return call_user_func(__CLASS__.'__'.self::$vendor.'::'.__FUNCTION__, $beanType);
 	}
-
-
 
 
 	/**
@@ -157,10 +95,8 @@ class ORM implements ORM__Interface {
 	</fusedoc>
 	*/
 	public static function count($beanType, $sql='', $param=[]) {
-		return self::invoke(__FUNCTION__, $beanType, $sql, $param);
+		return call_user_func(__CLASS__.'__'.self::$vendor.'::'.__FUNCTION__, $beanType, $sql, $param);
 	}
-
-
 
 
 	/**
@@ -179,10 +115,8 @@ class ORM implements ORM__Interface {
 	</fusedoc>
 	*/
 	public static function delete($bean) {
-		return self::invoke(__FUNCTION__, $bean);
+		return call_user_func(__CLASS__.'__'.self::$vendor.'::'.__FUNCTION__, $bean);
 	}
-
-
 
 
 	/**
@@ -203,10 +137,8 @@ class ORM implements ORM__Interface {
 	</fusedoc>
 	*/
 	public static function first($beanType, $sql='', $param=[]) {
-		return self::invoke(__FUNCTION__, $beanType, $sql, $param);
+		return call_user_func(__CLASS__.'__'.self::$vendor.'::'.__FUNCTION__, $beanType, $sql, $param);
 	}
-
-
 
 
 	/**
@@ -233,10 +165,8 @@ class ORM implements ORM__Interface {
 	</fusedoc>
 	*/
 	public static function get($beanType, $sqlOrID='', $param=[]) {
-		return self::invoke(__FUNCTION__, $beanType, $sqlOrID, $param);
+		return call_user_func(__CLASS__.'__'.self::$vendor.'::'.__FUNCTION__, $beanType, $sqlOrID, $param);
 	}
-
-
 
 
 	/**
@@ -255,7 +185,7 @@ class ORM implements ORM__Interface {
 	</fusedoc>
 	*/
 	public static function new($beanType, $data=[]) {
-		return self::invoke(__FUNCTION__, $beanType, $data);
+		return call_user_func(__CLASS__.'__'.self::$vendor.'::'.__FUNCTION__, $beanType, $data);
 	}
 
 
@@ -281,10 +211,8 @@ class ORM implements ORM__Interface {
 	</fusedoc>
 	*/
 	public static function query($sql, $param=[]) {
-		return self::invoke(__FUNCTION__, $sql, $param);
+		return call_user_func(__CLASS__.'__'.self::$vendor.'::'.__FUNCTION__, $sql, $param);
 	}
-
-
 
 
 	/**
@@ -303,10 +231,8 @@ class ORM implements ORM__Interface {
 	</fusedoc>
 	*/
 	public static function save($bean) {
-		return self::invoke(__FUNCTION__, $bean);
+		return call_user_func(__CLASS__.'__'.self::$vendor.'::'.__FUNCTION__, $bean);
 	}
-
-
 
 
 	/**
@@ -329,8 +255,6 @@ class ORM implements ORM__Interface {
 	public static function slots($param) {
 		return implode(',', array_fill(0, count($param), '?'));
 	}
-
-
 
 
 	// alias methods
