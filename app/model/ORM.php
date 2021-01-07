@@ -21,7 +21,7 @@ class ORM {
 
 
 	// invoke method of corresponding vendor class
-	// ===> with dynamic number of arguments (max 9)
+	// ===> with dynamic number of arguments
 	private static function invoke() {
 		$args = func_get_args();
 		// validate class
@@ -41,16 +41,17 @@ class ORM {
 		}
 		// call method with arguments
 		switch ( count($args) ) {
-			case  9:  return $class::$method($args[0], $args[1], $args[2], $args[3], $args[4], $args[5], $args[6], $args[7], $args[8]);
-			case  8:  return $class::$method($args[0], $args[1], $args[2], $args[3], $args[4], $args[5], $args[6], $args[7]);
-			case  7:  return $class::$method($args[0], $args[1], $args[2], $args[3], $args[4], $args[5], $args[6]);
-			case  6:  return $class::$method($args[0], $args[1], $args[2], $args[3], $args[4], $args[5]);
-			case  5:  return $class::$method($args[0], $args[1], $args[2], $args[3], $args[4]);
-			case  4:  return $class::$method($args[0], $args[1], $args[2], $args[3]);
-			case  3:  return $class::$method($args[0], $args[1], $args[2]);
-			case  2:  return $class::$method($args[0], $args[1]);
+			case  0:  return $class::$method();
 			case  1:  return $class::$method($args[0]);
-			default:  return $class::$method();
+			case  2:  return $class::$method($args[0], $args[1]);
+			case  3:  return $class::$method($args[0], $args[1], $args[2]);
+			case  4:  return $class::$method($args[0], $args[1], $args[2], $args[3]);
+			case  5:  return $class::$method($args[0], $args[1], $args[2], $args[3], $args[4]);
+			case  6:  return $class::$method($args[0], $args[1], $args[2], $args[3], $args[4], $args[5]);
+			case  7:  return $class::$method($args[0], $args[1], $args[2], $args[3], $args[4], $args[5], $args[6]);
+			case  8:  return $class::$method($args[0], $args[1], $args[2], $args[3], $args[4], $args[5], $args[6], $args[7]);
+			case  9:  return $class::$method($args[0], $args[1], $args[2], $args[3], $args[4], $args[5], $args[6], $args[7], $args[8]);
+			default:  self::$error = 'Please enhance <em>ORM::invoke()</em> to pass-through more arguments'; return false;
 		}
 	}
 
