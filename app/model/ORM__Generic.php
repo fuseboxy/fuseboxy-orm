@@ -158,6 +158,25 @@ class ORM__Generic implements ORM__Interface {
 
 	// create new container (preload with data)
 	public static function new($beanType, $data) {
+		$bean = new stdClass();
+		$bean->__type__ = $beanType;
+		// import & validation
+		foreach ( $data as $key => $val ) {
+			// check key
+			if ( is_numeric($key) ) {
+				self::$error = 'Data must be associative array';
+				return false;
+			// check simple value
+			} elseif ( !is_string($val) or !is_numeric($val) or !is_boolean($val) ) {
+				self::$error = "Field [{$key}] must be simple value";
+				return false;
+			// import
+			} else {
+				$bean->{$key} = is_boolean($val) ? (int)$val : $val;
+			}
+		}
+		// done!
+		return $bean;
 	}
 
 
@@ -167,7 +186,19 @@ class ORM__Generic implements ORM__Interface {
 
 
 	// save object into database
-	public static function save($bean) {
+	public static function save($bean) {{
+		// validation
+		if ( empty($bean->__type__) ) {
+			self::$error = 'Bean type is unknown';
+			return false;
+		}
+		// prepare statement
+		if ( empty($bean->id) ) {
+			self::$error = 'ID is empty';
+			return false;
+		}
+		// done!
+		return self::query($sql, $param);
 	}
 
 
