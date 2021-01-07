@@ -139,16 +139,13 @@ class ORM__RedBean implements ORM__Interface {
 	// obtain multiple records according to criteria
 	public static function get($beanType, $filterOrID, $param) {
 		if ( self::init() === false ) return false;
-		// get multiple records
-		if ( !is_numeric($filterOrID) ) {
-			$result = R::find($beanType, $filterOrID, $param);
-		// get single record
-		} else {
-			$result = R::load($beanType, $filterOrID);
-			if ( empty($result->id) ) {
-				self::$error = "Record not found (id={$filterOrID})";
-				return false;
-			}
+		// get multiple records, or...
+		if ( !is_numeric($filterOrID) ) return R::find($beanType, $filterOrID, $param);
+		// get specific record
+		$result = R::load($beanType, $filterOrID);
+		if ( empty($result->id) ) {
+			self::$error = "Record not found (id={$filterOrID})";
+			return false;
 		}
 		// done!
 		return $result;
