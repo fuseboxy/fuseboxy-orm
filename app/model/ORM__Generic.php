@@ -105,6 +105,19 @@ class ORM__Generic implements ORM__Interface {
 
 	// delete specific record
 	public static function delete($bean) {
+		// validation
+		if ( empty($bean->__type__) ) {
+			self::$error = 'Bean type is unknown';
+			return false;
+		} elseif ( empty($bean->id) ) {
+			self::$error = 'ID is empty';
+			return false;
+		}
+		// prepare statement
+		$sql = "DELETE FROM `{$bean->__type__}` WHERE id = ? ";
+		$param = array($bean->id);
+		// done!
+		return self::query($sql, $param);
 	}
 
 
@@ -149,7 +162,7 @@ class ORM__Generic implements ORM__Interface {
 	}
 
 
-	// create new container (preloaded with data)
+	// create new container (preload with data)
 	public static function new($beanType, $data) {
 	}
 
