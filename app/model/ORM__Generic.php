@@ -219,10 +219,20 @@ class ORM__Generic implements ORM__Interface {
 			self::$error = 'Bean type is unknown';
 			return false;
 		}
+		// obtain data fields
+		$data = get_object_vars($bean);
+		unset($data['__type__']);
 		// prepare statement
 		if ( empty($bean->id) ) {
-			self::$error = 'ID is empty';
-			return false;
+			if ( isset($data['id']) ) unset($data['id']);
+			$sql = "INSERT INTO `{$bean->__type__}` (".implode(',', array_keys($data)).") VALUES (".ORM::slots($data).")";
+			$param = array_values($data);
+		} else {
+			$arr = array();
+			foreach ( $data as $key => $val ) $arr[] = "`{$key}` = ?";
+			$sql = "UPDATE `{$bean->__type__}` SET ".implode(',', $arr)." WHERE id = ? ";
+			$param = array_values($data);
+			$param[] = $bean->id;
 		}
 		// done!
 		return self::query($sql, $param);
