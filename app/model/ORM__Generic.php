@@ -14,6 +14,34 @@ class ORM__Generic implements ORM__Interface {
 
 
 
+	/**
+	<fusedoc>
+		<description>
+			setup and prepare connection to database
+		</description>
+		<io>
+			<in>
+				<structure name="config" scope="$fusebox">
+					<structure name="db">
+						<string name="host" />
+						<string name="name" />
+						<string name="username" />
+						<string name="password" />
+					</structure>
+				</structure>
+			</in>
+			<out>
+				<boolean name="~return~" />
+			</out>
+		</io>
+	</fusedoc>
+	*/
+	public static function init() {
+	}
+
+
+
+
 	// get all records
 	public static function all($beanType, $sql) {
 	}

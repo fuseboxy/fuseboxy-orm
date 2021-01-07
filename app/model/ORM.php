@@ -8,21 +8,26 @@ class ORM implements ORM__Interface {
 	public static function error() { return self::$error; }
 
 
-
-
-	// get or set vendor
+	// get ORM vendor
 	private static $vendor = 'redbean';
-	public static function vendor($name=null) {
-		if ( empty($name) ) return self::$vendor;
-		self::$vendor = strtolower($name);
-		return true;
-	}
+	public static function vendor() { return self::$vendor; }
 
 
 
 
-	// invoke method of corresponding vendor class
-	// ===> with dynamic number of arguments
+	/**
+	<fusedoc>
+		<description>
+			invoke method of corresponding vendor class (with dynamic number of arguments)
+		</description>
+		<io>
+			<in />
+			<out>
+				<boolean name="~return~" />
+			</out>
+		</io>
+	</fusedoc>
+	*/
 	public static function invoke() {
 		$args = func_get_args();
 		// validate class
@@ -62,6 +67,23 @@ class ORM implements ORM__Interface {
 		// done!
 		return $result;
 	}
+
+
+
+	/**
+	<fusedoc>
+		<description>
+			setup ORM of corresponding vendor
+		</description>
+		<io>
+			<in />
+			<out>
+				<boolean name="~return~" />
+			</out>
+		</io>
+	</fusedoc>
+	*/
+	public static function init() { return self::invoke(__FUNCTION__); }
 
 
 
