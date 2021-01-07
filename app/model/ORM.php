@@ -342,4 +342,4 @@ class ORM implements ORM__Interface {
 
 
 // define alias
-class O extends ORM {}
+class_alias('ORM', 'O');
