@@ -62,8 +62,7 @@ class ORM__Generic implements ORM__Interface {
 		// keep connection opened for this HTTP request
 		self::$conn = @mysqli_connect($dbConfig['host'], $dbConfig['username'], $dbConfig['password'], $dbConfig['name']);
 		if ( !self::$conn ) {
-			$err = error_get_last();
-			self::$error = "[Line {$err['line']}] {$err['message']} ({$err['file']})";
+			self::$error = 'Unable to connect to MySQL : '.mysqli_connect_error().' ('.mysqli_connect_errno().')';
 			return false;
 		}
 		// done!
@@ -73,6 +72,7 @@ class ORM__Generic implements ORM__Interface {
 
 	// get all records
 	public static function all($beanType, $order) {
+		return self::query("SELECT * FROM `{$beanType}` {$order}");
 	}
 
 
@@ -83,6 +83,16 @@ class ORM__Generic implements ORM__Interface {
 
 	// count number of records accorrding to criteria
 	public static function count($beanType, $filter, $param) {
+		$filter = trim($filter);
+		// prepare statement
+		$sql = "SELECT COUNT(*) AS recordcount FROM `{$beanType}` ";
+		if ( stripos($filter, 'ORDER') !== false ) $sql .= " WHERE ";
+		$sql .= $filter;
+		// get data
+		$data = self::query($sql, $param);
+		if ( $data === false ) return false;
+		// done!
+		return array_shift($data)['recordcount'];
 	}
 
 
@@ -93,12 +103,24 @@ class ORM__Generic implements ORM__Interface {
 
 	// obtain first record according to the criteria
 	public static function first($beanType, $filter, $param) {
+		$filter = trim($filter);
+		// prepare statement
+		$sql = "SELECT COUNT(*) AS recordcount FROM `{$beanType}` ";
+		if ( stripos($filter, 'ORDER') !== false ) $sql .= " WHERE ";
+		$sql .= $filter;
+		$sql .= " LIMIT 1 ";
+		// get data
+		$data = self::query($sql, $param);
+		if ( $data === false ) return false;
+		// done!
+		return array_shift($data);
 	}
 
 
 	// obtain specific record according to ID, or...
 	// obtain multiple records according to criteria
 	public static function get($beanType, $filterOrID, $param) {
+		$filterOrID = trim($filterOrID);
 	}
 
 
