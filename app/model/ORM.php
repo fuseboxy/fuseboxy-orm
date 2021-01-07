@@ -8,7 +8,7 @@ class ORM implements ORM__Interface {
 	public static function error() { return self::$error; }
 
 
-	// get ORM vendor
+	// get vendor of ORM
 	private static $vendor = 'redbean';
 	public static function vendor() { return self::$vendor; }
 

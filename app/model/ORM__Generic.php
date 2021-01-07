@@ -4,7 +4,7 @@ class ORM__Generic implements ORM__Interface {
 
 
 	// properties
-	private static $conn = null;
+	private static $conn;
 
 
 	// get (latest) error message
@@ -12,15 +12,14 @@ class ORM__Generic implements ORM__Interface {
 	public static function error() { return self::$error; }
 
 
-
-
 	/**
 	<fusedoc>
 		<description>
-			setup and prepare connection to database
+			prepare database connection
 		</description>
 		<io>
 			<in>
+				<object name="$conn" scope="self" optional="yes" />
 				<structure name="config" scope="$fusebox">
 					<structure name="db">
 						<string name="host" />
@@ -31,15 +30,45 @@ class ORM__Generic implements ORM__Interface {
 				</structure>
 			</in>
 			<out>
+				<object name="$conn" scope="self" optional="yes" />
 				<boolean name="~return~" />
 			</out>
 		</io>
 	</fusedoc>
 	*/
 	public static function init() {
+		// check status
+		if ( self::$conn ) return true;
+		// load config
+		$dbConfig = F::config('db');
+		// check config
+		if ( empty($dbConfig) ) {
+			self::$error = 'Database config is missing';
+			return false;
+		} elseif ( empty($dbConfig['host']) ) {
+			self::$error = 'Database config [host] is required';
+			return false;
+		} elseif ( empty($dbConfig['name']) ) {
+			self::$error = 'Database config [name] is required';
+			return false;
+		} elseif ( empty($dbConfig['username']) ) {
+			self::$error = 'Database config [username] is required';
+			return false;
+		// allow empty password but must be defined
+		} elseif ( !isset($dbConfig['password']) ) {
+			self::$error = 'Database config [password] is required';
+			return false;
+		}
+		// keep connection opened for this HTTP request
+		self::$conn = @mysqli_connect($dbConfig['host'], $dbConfig['username'], $dbConfig['password'], $dbConfig['name']);
+		if ( !self::$conn ) {
+			$err = error_get_last();
+			self::$error = "[Line {$err['line']}] {$err['message']} ({$err['file']})";
+			return false;
+		}
+		// done!
+		return true;
 	}
-
-
 
 
 	// get all records
@@ -47,13 +76,9 @@ class ORM__Generic implements ORM__Interface {
 	}
 
 
-
-
 	// get columns of specific table
 	public static function columns($beanType) {
 	}
-
-
 
 
 	// count number of records accorrding to criteria
@@ -61,20 +86,14 @@ class ORM__Generic implements ORM__Interface {
 	}
 
 
-
-
 	// delete specific record
 	public static function delete($bean) {
 	}
 
 
-
-
 	// obtain first record according to the criteria
 	public static function first($beanType, $sql, $param) {
 	}
-
-
 
 
 	// obtain specific record according to ID, or...
@@ -83,20 +102,14 @@ class ORM__Generic implements ORM__Interface {
 	}
 
 
-
-
 	// create new container (preloaded with data)
 	public static function new($beanType, $data) {
 	}
 
 
-
-
 	// run sql statement
 	public static function query($sql, $param) {
 	}
-
-
 
 
 	// save object into database
