@@ -142,18 +142,12 @@ class ORM__Generic implements ORM__Interface {
 		if ( !is_numeric($filterOrID) ) {
 			$sql  = "SELECT * FROM `{$beanType}` ";
 			$sql .= ( stripos(trim($filterOrID), 'ORDER') === 0 ) ? $filterOrID : " WHERE {$filterOrID} ";
-		// get specific record
-		} else {
-			$sql = "SELECT * FROM `{$beanType}` WHERE id = ? ";
-			$param = array($filterOrID);
+			return self::query($sql, $param);
 		}
-		// get data
-		$data = self::query($sql, $param);
-		if ( $data === false ) return false;
-		// flatten to single record (when necessary)
-		if ( is_numeric($filterOrID) ) $data = array_shift($data);
+		// get specific record
+		$data = self::first($beanType, 'id = ?', [$filterOrID]);
 		// validation (when specific record)
-		if ( is_numeric($filterOrID) and empty($data) ) {
+		if ( empty($data) ) {
 			self::$error = "Record not found (id={$filterOrID})";
 			return false;
 		}
