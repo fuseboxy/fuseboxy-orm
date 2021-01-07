@@ -41,18 +41,25 @@ class ORM {
 		}
 		// call method with arguments
 		switch ( count($args) ) {
-			case  0:  return $class::$method();
-			case  1:  return $class::$method($args[0]);
-			case  2:  return $class::$method($args[0], $args[1]);
-			case  3:  return $class::$method($args[0], $args[1], $args[2]);
-			case  4:  return $class::$method($args[0], $args[1], $args[2], $args[3]);
-			case  5:  return $class::$method($args[0], $args[1], $args[2], $args[3], $args[4]);
-			case  6:  return $class::$method($args[0], $args[1], $args[2], $args[3], $args[4], $args[5]);
-			case  7:  return $class::$method($args[0], $args[1], $args[2], $args[3], $args[4], $args[5], $args[6]);
-			case  8:  return $class::$method($args[0], $args[1], $args[2], $args[3], $args[4], $args[5], $args[6], $args[7]);
-			case  9:  return $class::$method($args[0], $args[1], $args[2], $args[3], $args[4], $args[5], $args[6], $args[7], $args[8]);
-			default:  self::$error = 'Please enhance <em>ORM::invoke()</em> to pass-through more arguments'; return false;
+			case  0: $result = $class::$method(); break;
+			case  1: $result = $class::$method($args[0]); break;
+			case  2: $result = $class::$method($args[0], $args[1]); break;
+			case  3: $result = $class::$method($args[0], $args[1], $args[2]); break;
+			case  4: $result = $class::$method($args[0], $args[1], $args[2], $args[3]); break;
+			case  5: $result = $class::$method($args[0], $args[1], $args[2], $args[3], $args[4]); break;
+			case  6: $result = $class::$method($args[0], $args[1], $args[2], $args[3], $args[4], $args[5]); break;
+			case  7: $result = $class::$method($args[0], $args[1], $args[2], $args[3], $args[4], $args[5], $args[6]); break;
+			case  8: $result = $class::$method($args[0], $args[1], $args[2], $args[3], $args[4], $args[5], $args[6], $args[7]); break;
+			case  9: $result = $class::$method($args[0], $args[1], $args[2], $args[3], $args[4], $args[5], $args[6], $args[7], $args[8]); break;
+			default: self::$error = 'Please enhance <em>ORM::invoke()</em> to pass-through more arguments'; return false;
 		}
+		// validation
+		if ( $result === false ) {
+			self::$error = $class::error();
+			return false;
+		}
+		// done!
+		return $result;
 	}
 
 
