@@ -85,9 +85,9 @@ class ORM__RedBean implements ORM__Interface {
 
 
 	// get all records
-	public static function all($beanType, $sql) {
+	public static function all($beanType, $order) {
 		if ( self::init() === false ) return false;
-		return R::findAll($beanType, $sql);
+		return R::findAll($beanType, $order);
 	}
 
 
@@ -107,9 +107,9 @@ class ORM__RedBean implements ORM__Interface {
 
 
 	// count number of records accorrding to criteria
-	public static function count($beanType, $sql, $param) {
+	public static function count($beanType, $filter, $param) {
 		if ( self::init() === false ) return false;
-		return R::count($beanType, $sql, $param);
+		return R::count($beanType, $filter, $param);
 	}
 
 
@@ -129,24 +129,24 @@ class ORM__RedBean implements ORM__Interface {
 
 
 	// obtain first record according to the criteria
-	public static function first($beanType, $sql, $param) {
+	public static function first($beanType, $filter, $param) {
 		if ( self::init() === false ) return false;
-		return R::findOne($beanType, $sql, $param);
+		return R::findOne($beanType, $filter, $param);
 	}
 
 
 	// obtain specific record according to ID, or...
 	// obtain multiple records according to criteria
-	public static function get($beanType, $sqlOrID, $param) {
+	public static function get($beanType, $filterOrID, $param) {
 		if ( self::init() === false ) return false;
 		// get multiple records
-		if ( !is_numeric($sqlOrID) ) {
-			$result = R::find($beanType, $sqlOrID, $param);
+		if ( !is_numeric($filterOrID) ) {
+			$result = R::find($beanType, $filterOrID, $param);
 		// get single record
 		} else {
-			$result = R::load($beanType, $sqlOrID);
+			$result = R::load($beanType, $filterOrID);
 			if ( empty($result->id) ) {
-				self::$error = "Record not found (id={$sqlOrID})";
+				self::$error = "Record not found (id={$filterOrID})";
 				return false;
 			}
 		}

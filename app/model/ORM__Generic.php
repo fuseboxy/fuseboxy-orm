@@ -72,7 +72,7 @@ class ORM__Generic implements ORM__Interface {
 
 
 	// get all records
-	public static function all($beanType, $sql) {
+	public static function all($beanType, $order) {
 	}
 
 
@@ -82,7 +82,7 @@ class ORM__Generic implements ORM__Interface {
 
 
 	// count number of records accorrding to criteria
-	public static function count($beanType, $sql, $param) {
+	public static function count($beanType, $filter, $param) {
 	}
 
 
@@ -92,13 +92,13 @@ class ORM__Generic implements ORM__Interface {
 
 
 	// obtain first record according to the criteria
-	public static function first($beanType, $sql, $param) {
+	public static function first($beanType, $filter, $param) {
 	}
 
 
 	// obtain specific record according to ID, or...
 	// obtain multiple records according to criteria
-	public static function get($beanType, $sqlOrID, $param) {
+	public static function get($beanType, $filterOrID, $param) {
 	}
 
 
