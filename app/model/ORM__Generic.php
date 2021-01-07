@@ -62,7 +62,7 @@ class ORM__Generic implements ORM__Interface {
 		// keep connection opened for this HTTP request
 		self::$conn = @mysqli_connect($dbConfig['host'], $dbConfig['username'], $dbConfig['password'], $dbConfig['name']);
 		if ( !self::$conn ) {
-			self::$error = 'Unable to connect to MySQL : '.mysqli_connect_error().' ('.mysqli_connect_errno().')';
+			self::$error = 'Error occurred while connecting to MySQL : '.mysqli_connect_error().' ('.mysqli_connect_errno().')';
 			return false;
 		}
 		// done!
@@ -138,21 +138,24 @@ class ORM__Generic implements ORM__Interface {
 	// obtain specific record according to ID, or...
 	// obtain multiple records according to criteria
 	public static function get($beanType, $filterOrID, $param) {
+		$result = array();
 		// get multiple records, or...
 		if ( !is_numeric($filterOrID) ) {
 			$sql  = "SELECT * FROM `{$beanType}` ";
 			$sql .= ( stripos(trim($filterOrID), 'ORDER') === 0 ) ? $filterOrID : " WHERE {$filterOrID} ";
-			return self::query($sql, $param);
+			$data = self::query($sql, $param);
+			if ( $data === false ) return false;
+			foreach ( $data as $itemData ) $result[] = self::new($beanType, $itemData);
 		}
 		// get specific record
-		$data = self::first($beanType, 'id = ?', [$filterOrID]);
+		$result = self::first($beanType, 'id = ?', [$filterOrID]);
 		// validation (when specific record)
-		if ( empty($data) ) {
+		if ( empty($result) ) {
 			self::$error = "Record not found (id={$filterOrID})";
 			return false;
 		}
 		// done!
-		return $data;
+		return $result;
 	}
 
 
@@ -182,6 +185,7 @@ class ORM__Generic implements ORM__Interface {
 
 	// run sql statement
 	public static function query($sql, $param) {
+
 	}
 
 
