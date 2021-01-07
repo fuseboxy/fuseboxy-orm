@@ -27,7 +27,7 @@ class ORM {
 		// validate class
 		$class = __CLASS__.'__'.self::$vendor;
 		if ( !class_exists($class) ) {
-			self::$error = "Class <em>{$class}</em> not exists";
+			self::$error = "Class [{$class}] not exists";
 			return false;
 		}
 		// validate method
@@ -36,7 +36,7 @@ class ORM {
 			self::$error = 'Method name is required';
 			return false;
 		} elseif ( !method_exists($class, $method) ) {
-			self::$error = "Method <em>{$class}::{$method}()</em> not exists";
+			self::$error = "Method [{$class}::{$method}] not exists";
 			return false;
 		}
 		// call method with arguments
@@ -51,7 +51,7 @@ class ORM {
 			case  7: $result = $class::$method($args[0], $args[1], $args[2], $args[3], $args[4], $args[5], $args[6]); break;
 			case  8: $result = $class::$method($args[0], $args[1], $args[2], $args[3], $args[4], $args[5], $args[6], $args[7]); break;
 			case  9: $result = $class::$method($args[0], $args[1], $args[2], $args[3], $args[4], $args[5], $args[6], $args[7], $args[8]); break;
-			default: self::$error = 'Please enhance <em>ORM::invoke()</em> to pass-through more arguments'; return false;
+			default: self::$error = 'Please enhance [ORM::invoke] method to allow more arguments to pass through'; return false;
 		}
 		// validation
 		if ( $result === false ) {
