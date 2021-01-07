@@ -22,7 +22,7 @@ class ORM {
 
 	// invoke method of corresponding vendor class
 	// ===> with dynamic number of arguments
-	private static function invoke() {
+	public static function invoke() {
 		$args = func_get_args();
 		// validate class
 		$class = __CLASS__.'__'.self::$vendor;
