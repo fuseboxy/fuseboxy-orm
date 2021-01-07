@@ -92,11 +92,9 @@ class ORM__Generic implements ORM__Interface {
 
 	// count number of records accorrding to criteria
 	public static function count($beanType, $filter, $param) {
-		$filter = trim($filter);
 		// prepare statement
-		$sql = "SELECT COUNT(*) AS recordcount FROM `{$beanType}` ";
-		if ( stripos($filter, 'ORDER') !== false ) $sql .= " WHERE ";
-		$sql .= $filter;
+		$sql  = "SELECT COUNT(*) AS recordcount FROM `{$beanType}` ";
+		$sql .= ( stripos(trim($filter), 'ORDER') === 0 ) ? $filter : " WHERE {$filter} ";
 		// get data
 		$data = self::query($sql, $param);
 		if ( $data === false ) return false;
@@ -112,11 +110,9 @@ class ORM__Generic implements ORM__Interface {
 
 	// obtain first record according to the criteria
 	public static function first($beanType, $filter, $param) {
-		$filter = trim($filter);
 		// prepare statement
-		$sql = "SELECT COUNT(*) AS recordcount FROM `{$beanType}` ";
-		if ( stripos($filter, 'ORDER') !== false ) $sql .= " WHERE ";
-		$sql .= $filter;
+		$sql  = "SELECT * FROM `{$beanType}` ";
+		$sql .= ( stripos(trim($filter), 'ORDER') === 0 ) ? $filter : " WHERE {$filter} ";
 		$sql .= " LIMIT 1 ";
 		// get data
 		$data = self::query($sql, $param);
@@ -129,7 +125,27 @@ class ORM__Generic implements ORM__Interface {
 	// obtain specific record according to ID, or...
 	// obtain multiple records according to criteria
 	public static function get($beanType, $filterOrID, $param) {
-		$filterOrID = trim($filterOrID);
+		// get multiple records, or...
+		if ( !is_numeric($filterOrID) ) {
+			$sql  = "SELECT * FROM `{$beanType}` ";
+			$sql .= ( stripos(trim($filterOrID), 'ORDER') === 0 ) ? $filterOrID : " WHERE {$filterOrID} ";
+		// get specific record
+		} else {
+			$sql = "SELECT * FROM `{$beanType}` WHERE id = ? ";
+			$param = array($filterOrID);
+		}
+		// get data
+		$data = self::query($sql, $param);
+		if ( $data === false ) return false;
+		// flatten to single record (when necessary)
+		if ( is_numeric($filterOrID) ) $data = array_shift($data);
+		// validation (when specific record)
+		if ( is_numeric($filterOrID) and empty($data) ) {
+			self::$error = "Record not found (id={$filterOrID})";
+			return false;
+		}
+		// done!
+		return $data;
 	}
 
 
