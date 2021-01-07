@@ -1,5 +1,6 @@
 <?php
-class ORM__RedBean {
+require_once 'ORM__Interface.php';
+class ORM__RedBean implements ORM__Interface {
 
 
 	// properties
@@ -7,13 +8,9 @@ class ORM__RedBean {
 	private static $libPath = __DIR__.'/../../lib/redbeanphp/5.3.1/rb.php';
 
 
-
-
 	// get (latest) error message
 	private static $error;
 	public static function error() { return self::$error; }
-
-
 
 
 	/**
@@ -87,15 +84,11 @@ class ORM__RedBean {
 	}
 
 
-
-
 	// get all records
 	public static function all($beanType, $sql) {
 		if ( self::init() === false ) return false;
 		return R::findAll($beanType, $sql);
 	}
-
-
 
 
 	// get columns of specific table
@@ -113,15 +106,11 @@ class ORM__RedBean {
 	}
 
 
-
-
 	// count number of records accorrding to criteria
 	public static function count($beanType, $sql, $param) {
 		if ( self::init() === false ) return false;
 		return R::count($beanType, $sql, $param);
 	}
-
-
 
 
 	// delete specific record
@@ -139,15 +128,11 @@ class ORM__RedBean {
 	}
 
 
-
-
 	// obtain first record according to the criteria
 	public static function first($beanType, $sql, $param) {
 		if ( self::init() === false ) return false;
 		return R::findOne($beanType, $sql, $param);
 	}
-
-
 
 
 	// obtain specific record according to ID, or...
@@ -170,8 +155,6 @@ class ORM__RedBean {
 	}
 
 
-
-
 	// create new container (preloaded with data)
 	public static function new($beanType, $data) {
 		if ( self::init() === false ) return false;
@@ -188,8 +171,6 @@ class ORM__RedBean {
 	}
 
 
-
-
 	// run sql statement
 	public static function query($sql, $param) {
 		if ( self::init() === false ) return false;
@@ -204,8 +185,6 @@ class ORM__RedBean {
 		// done!
 		return $result;
 	}
-
-
 
 
 	// save object into database
