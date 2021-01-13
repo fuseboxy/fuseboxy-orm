@@ -28,7 +28,14 @@ class ORM implements ORM__Interface {
 	*/
 	public static function init($vendor=null) {
 		if ( !empty($vendor) ) self::$vendor = $vendor;
-		return call_user_func(__CLASS__.'__'.self::$vendor.'::'.__FUNCTION__);
+		// check class
+		$className = __CLASS__.'__'.self::$vendor;
+		if ( class_exists($className) ) {
+			self::$error = "Class [{$className}] is missing";
+			return false;
+		}
+		// done!
+		return call_user_func($className.'::'.__FUNCTION__);
 	}
 
 
