@@ -203,7 +203,7 @@ class ORM__Generic implements ORM__Interface {
 
 
 	// save object into database
-	public static function save($bean) {{
+	public static function save($bean) {
 		// validation
 		if ( empty($bean->__type__) ) {
 			self::$error = 'Bean type is unknown';
