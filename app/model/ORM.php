@@ -30,7 +30,7 @@ class ORM implements ORM__Interface {
 		if ( !empty($vendor) ) self::$vendor = $vendor;
 		// check class
 		$className = __CLASS__.'__'.self::$vendor;
-		if ( class_exists($className) ) {
+		if ( !class_exists($className) ) {
 			self::$error = "Class [{$className}] is missing";
 			return false;
 		}
