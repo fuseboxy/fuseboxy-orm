@@ -174,7 +174,7 @@ class ORM__Generic implements ORM__Interface {
 		$sql = trim($sql);
 		$return = strtolower($return);
 		// determine operation
-		$operation = strtoupper( array_shift( explode(' ', $sql) ) ) );
+		$operation = strtoupper( array_shift( explode(' ', $sql) ) );
 		// prepare statement
 		$sql = trim($sql);
 		$query = @mysqli_prepare(self::$conn, $sql);
