@@ -78,28 +78,15 @@ class ORM__Generic implements ORM__Interface {
 
 	// get columns of specific table
 	public static function columns($beanType) {
-		$result = array();
-		// get column info
-		$sql = "SHOW COLUMNS FROM `{$beanType}` ";
-		$data = self::query($sql);
-		if ( $data === false ) return false;
-		// put into result
-		foreach ( $data as $item ) $result[] = $item['field'];
-		// done!
-		return $result;
+		return self::query("SHOW COLUMNS FROM `{$beanType}` ", [], 'col');
 	}
 
 
 	// count number of records accorrding to criteria
 	public static function count($beanType, $filter, $param) {
-		// prepare statement
-		$sql  = "SELECT COUNT(*) AS recordcount FROM `{$beanType}` ";
+		$sql  = "SELECT COUNT(*) FROM `{$beanType}` ";
 		$sql .= ( stripos(trim($filter), 'ORDER') === 0 ) ? $filter : " WHERE {$filter} ";
-		// get data
-		$data = self::query($sql, $param);
-		if ( $data === false ) return false;
-		// done!
-		return array_shift($data)['recordcount'];
+		return self::query($sql, $param, 'cell');
 	}
 
 
@@ -123,15 +110,10 @@ class ORM__Generic implements ORM__Interface {
 
 	// obtain first record according to the criteria
 	public static function first($beanType, $filter, $param) {
-		// prepare statement
 		$sql  = "SELECT * FROM `{$beanType}` ";
 		$sql .= ( stripos(trim($filter), 'ORDER') === 0 ) ? $filter : " WHERE {$filter} ";
 		$sql .= " LIMIT 1 ";
-		// get data
-		$data = self::query($sql, $param);
-		if ( $data === false ) return false;
-		// done!
-		return array_shift($data);
+		return self::query($sql, $param, 'row');
 	}
 
 
@@ -184,10 +166,15 @@ class ORM__Generic implements ORM__Interface {
 
 
 	// run sql statement
-	public static function query($sql, $param) {
+	public static function query($sql, $param, $return) {
 		if ( self::init() === false ) return false;
 		// container
 		$result = array();
+		// fix argument
+		$sql = trim($sql);
+		$return = strtolower($return);
+		// determine operation
+		$operation = strtoupper( array_shift( explode(' ', $sql) ) ) );
 		// prepare statement
 		$sql = trim($sql);
 		$query = @mysqli_prepare(self::$conn, $sql);
@@ -204,8 +191,11 @@ class ORM__Generic implements ORM__Interface {
 			return false;
 		}
 		// obtain result according to operation
-		if ( stripos($sql, 'INSERT') === 0 ) $result = mysqli_insert_id();
-		if ( stripos($sql, 'SELECT') !== 0 ) $result = mysqli_affected_rows();
+		if ( $operation == 'INSERT' ) $result = mysqli_insert_id();
+		elseif ( $operation != 'SELECT' ) $result = mysqli_affected_rows();
+		elseif ( $return == 'row' ) $result = mysqli_fetch_array($query);
+		elseif ( $return == 'cell' ) $result = array_shift( mysqli_fetch_array($query) );
+		elseif ( in_array($return, ['col','column']) ) while ( $row = mysqli_fetch_array($query) ) $result[] = array_shift($row);
 		else while ( $row = mysqli_fetch_array($query) ) $result[] = $row;
 		// done!
 		return $result;
@@ -241,10 +231,7 @@ class ORM__Generic implements ORM__Interface {
 
 	// get name of all tables
 	public static function tables() {
-		$result = array();
-		$data = self::query('SHOW TABLES');
-		if ( $data === false ) return false;
-		return array_map(call_user_func(function($item){ return implode('', $item); }, $data);
+		return self::query('SHOW TABLES', [], 'col');
 	}
 
 

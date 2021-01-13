@@ -169,12 +169,21 @@ class ORM__RedBean implements ORM__Interface {
 
 
 	// run sql statement
-	public static function query($sql, $param) {
+	public static function query($sql, $param, $return) {
 		if ( self::init() === false ) return false;
+		// fix arguments
+		$sql = trim($sql);
+		$return = strtolower($return);
+		// determine operation
+		$operation = strtoupper( array_shift( explode(' ', $sql) ) ) );
 		// run method according to nature of query
 		try {
 			$sql = trim($sql);
-			$result = ( stripos($sql, 'SELECT') == 0 ) ? R::getAll($sql, $param) : R::exec($sql, $param);
+			if ( $operation != 'SELECT' ) $result = R::exec($sql, $param);
+			elseif ( $return == 'row' ) $result = R::getRow($sql, $param);
+			elseif ( $return == 'cell' ) $result = R::getCell($sql, $param);
+			elseif ( in_array($return, ['col','column']) ) $result = R::getCol($sql, $param);
+			else $result = R::getAll($sql, $param);
 		} catch (Exception $e) {
 			self::$error = $e->getMessage();
 			return false;

@@ -198,19 +198,27 @@ class ORM implements ORM__Interface {
 			<in>
 				<string name="$sql" />
 				<array name="$param" optional="yes" />
+				<string name="$return" optional="yes" default="all" comments="all|row|col|column|cell" />
 			</in>
 			<out>
-				<!-- select -->
-				<array name="~return~">
-					<structure name="+" />
+				<array name="~return~" optional="yes" oncondition="SELECT & [return=all]">
+					<structure name="+">
+						<mixed name="~column~" />
+					</structure>
 				</array>
-				<!-- insert / update / delete -->
-				<number name="~return~" comments="number of affected records; zero affected row does not mean error" />
+				<structure name="~return~" optional="yes" oncondition="SELECT & [return=row]" comments="return value of first row">
+					<mixed name="~column~" />
+				</structure>
+				<array name="~return~" optional="yes" oncondition="SELECT & [return=col|column]" comments="return value of first column">
+					<mixed name="+" />
+				</array>
+				<mixed name="~return~" optional="yes" oncondition="SELECT & [return=cell]" comments="return value of first cell" />
+				<number name="~return~" optional="yes" oncondition="INSERT|UPDATE|DELETE" comments="number of affected records; zero affected row does not mean error" />
 			</out>
 		</io>
 	</fusedoc>
 	*/
-	public static function query($sql, $param=[]) {
+	public static function query($sql, $param=[], $return='all') {
 		return call_user_func(__CLASS__.'__'.self::$vendor.'::'.__FUNCTION__, $sql, $param);
 	}
 
