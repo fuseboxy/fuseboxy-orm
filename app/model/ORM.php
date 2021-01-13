@@ -259,7 +259,7 @@ class ORM implements ORM__Interface {
 	</fusedoc>
 	*/
 	public static function tables() {
-		return call_user_func(__CLASS__.'__'.self::$vendor.'::'.__FUNCTION__, $bean);
+		return call_user_func(__CLASS__.'__'.self::$vendor.'::'.__FUNCTION__);
 	}
 
 
