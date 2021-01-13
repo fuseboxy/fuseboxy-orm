@@ -10,7 +10,8 @@ interface ORM__Interface {
 	public static function first($beanType, $filter, $param);
 	public static function get($beanType, $filterOrID, $param);
 	public static function new($beanType, $data);
-	public static function query($sql, $param);
+	public static function query($sql, $param,);
 	public static function save($bean);
+	public static function tables();
 
 }

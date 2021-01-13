@@ -238,6 +238,26 @@ class ORM implements ORM__Interface {
 	/**
 	<fusedoc>
 		<description>
+			get name of all tables
+		</description>
+		<io>
+			<in />
+			<out>
+				<array name="~return~">
+					<string name="+" />
+				</array>
+			</out>
+		</io>
+	</fusedoc>
+	*/
+	public static function tables() {
+		return call_user_func(__CLASS__.'__'.self::$vendor.'::'.__FUNCTION__, $bean);
+	}
+
+
+	/**
+	<fusedoc>
+		<description>
 			generate slots for query paramters
 		</description>
 		<io>

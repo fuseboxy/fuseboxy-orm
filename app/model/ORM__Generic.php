@@ -239,4 +239,13 @@ class ORM__Generic implements ORM__Interface {
 	}
 
 
+	// get name of all tables
+	public static function tables() {
+		$result = array();
+		$data = self::query('SHOW TABLES');
+		if ( $data === false ) return false;
+		return array_map(call_user_func(function($item){ return implode('', $item); }, $data);
+	}
+
+
 } // class

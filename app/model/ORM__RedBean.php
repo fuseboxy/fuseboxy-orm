@@ -204,4 +204,10 @@ class ORM__RedBean implements ORM__Interface {
 	}
 
 
+	// get name of tables
+	public static function tables() {
+		return R::inspect();
+	}
+
+
 } // class
