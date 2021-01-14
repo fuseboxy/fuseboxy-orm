@@ -170,34 +170,38 @@ class ORM__Generic implements ORM__Interface {
 		if ( self::init() === false ) return false;
 		// container
 		$result = array();
-		// fix argument
+		// fix arguments
 		$sql = trim($sql);
 		$return = strtolower($return);
 		// determine operation
 		$arr = explode(' ', $sql);
 		$operation = strtoupper(array_shift($arr));
-		// prepare statement
-		$sql = trim($sql);
-		$query = @mysqli_prepare(self::$conn, $sql);
-		if ( !$query ) {
-			$err = error_get_last();
-			self::$error = "Error occurred while preparing statement : {$err['message']} ({$err['file']})";
+		// determine param types
+		$paramTypes = '';
+		foreach ( $param as $item ) {
+			if ( is_int($item) ) $paramTypes .= 'i';
+			elseif ( is_numeric($item) ) $paramTypes .= 'd';
+			else $paramTypes .= 's';
+		}
+		// proceed to execute statement
+		try {
+			$stmt = self::$conn->prepare($sql);
+			if ( !empty($param) ) $stmt->bind_param($paramTypes, ...$param);
+			$stmt->execute();
+			// obtain query result object (when necessary)
+			if ( $operation == 'SELECT' ) $qryResult = $stmt->get_result();
+			// obtain result according to operation
+			if ( $operation == 'INSERT' ) $result = $stmt->insert_id;
+			elseif ( $operation != 'SELECT' ) $result = $stmt->affected_rows;
+			elseif ( $return == 'row' ) $result = $qryResult->fetch_array(MYSQLI_ASSOC);
+			elseif ( $return == 'cell' ) $result = array_shift( $qryResult->fetch_array(MYSQLI_ASSOC) );
+			elseif ( in_array($return, ['col','column']) ) while ( $row = $qryResult->fetch_array(MYSQLI_ASSOC) ) $result[] = array_shift($row);
+			else while ( $row = $qryResult->fetch_array(MYSQLI_ASSOC) ) $result[] = $row;
+		// if any error...
+		} catch (Exception $e) {
+			self::$error = $e->getMessage();
 			return false;
 		}
-		// execute statement
-		$executed = @odbc_execute($query, $param);
-		if ( !$executed ) {
-			$err = error_get_last();
-			self::$error = "Error occurred while executing statement : {$err['message']} ({$err['file']})";
-			return false;
-		}
-		// obtain result according to operation
-		if ( $operation == 'INSERT' ) $result = mysqli_insert_id();
-		elseif ( $operation != 'SELECT' ) $result = mysqli_affected_rows();
-		elseif ( $return == 'row' ) $result = mysqli_fetch_array($query);
-		elseif ( $return == 'cell' ) $result = array_shift( mysqli_fetch_array($query) );
-		elseif ( in_array($return, ['col','column']) ) while ( $row = mysqli_fetch_array($query) ) $result[] = array_shift($row);
-		else while ( $row = mysqli_fetch_array($query) ) $result[] = $row;
 		// done!
 		return $result;
 	}
