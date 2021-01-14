@@ -83,7 +83,7 @@ class ORM implements ORM__Interface {
 		// update corresponding property
 		self::$vendor = $options['vendor'];
 		// define class alias (when necessary)
-		if ( !empty($options['class_alias']) ) class_alias(__CLASS__, $options['class_alias']);
+		if ( !empty($options['class_alias']) and !class_exists($options['class_alias']) ) class_alias(__CLASS__, $options['class_alias']);
 		// validation
 		$className = __CLASS__.'__'.self::$vendor;
 		if ( !class_exists($className) ) {
