@@ -160,12 +160,12 @@ class ORM__Generic implements ORM__Interface {
 				self::$error = 'Data must be associative array';
 				return false;
 			// check simple value
-			} elseif ( !is_string($val) or !is_numeric($val) or !is_boolean($val) ) {
+			} elseif ( !is_string($val) and !is_numeric($val) and !is_bool($val) ) {
 				self::$error = "Field [{$key}] must be simple value";
 				return false;
 			// import
 			} else {
-				$bean->{$key} = is_boolean($val) ? (int)$val : $val;
+				$bean->{$key} = is_bool($val) ? (int)$val : $val;
 			}
 		}
 		// done!
@@ -174,7 +174,7 @@ class ORM__Generic implements ORM__Interface {
 
 
 	// run sql statement
-	public static function query($sql, $param, $return) {
+	public static function query($sql, $param=[], $return='all') {
 		if ( self::init() === false ) return false;
 		// container
 		$result = array();
@@ -197,10 +197,10 @@ class ORM__Generic implements ORM__Interface {
 			if ( !empty($param) ) $stmt->bind_param($paramTypes, ...$param);
 			$stmt->execute();
 			// obtain query result object (when necessary)
-			if ( $operation == 'SELECT' ) $qryResult = $stmt->get_result();
+			if ( !in_array($operation, ['INSERT','UPDATE','DELETE']) ) $qryResult = $stmt->get_result();
 			// obtain result according to operation
 			if ( $operation == 'INSERT' ) $result = $stmt->insert_id;
-			elseif ( $operation != 'SELECT' ) $result = $stmt->affected_rows;
+			elseif ( in_array($operation, ['UPDATE','DELETE']) ) $result = $stmt->affected_rows;
 			elseif ( $return == 'row' ) $result = $qryResult->fetch_array(MYSQLI_ASSOC);
 			elseif ( $return == 'cell' ) $result = array_shift( $qryResult->fetch_array(MYSQLI_ASSOC) );
 			elseif ( in_array($return, ['col','column']) ) while ( $row = $qryResult->fetch_array(MYSQLI_ASSOC) ) $result[] = array_shift($row);
@@ -244,7 +244,7 @@ class ORM__Generic implements ORM__Interface {
 
 	// get name of all tables
 	public static function tables() {
-		return self::query('SHOW TABLES', [], 'col');
+		return self::query('SHOW TABLES');
 	}
 
 
