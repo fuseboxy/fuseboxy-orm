@@ -9,7 +9,7 @@ class ORM implements ORM__Interface {
 
 
 	// get vendor of ORM
-	private static $vendor = 'redbean';
+	private static $vendor;
 	public static function vendor() { return self::$vendor; }
 
 
@@ -19,15 +19,28 @@ class ORM implements ORM__Interface {
 			setup ORM of corresponding vendor
 		</description>
 		<io>
-			<in />
+			<in>
+				<string name="$options" optional="yes" comments="vendor" />
+				<structure name="$options" optional="yes">
+					<string name="vendor" optional="yes" default="redbean" />
+					<string name="class_alias" optional="yes" default="O" />
+				</structure>
 			<out>
 				<boolean name="~return~" />
 			</out>
 		</io>
 	</fusedoc>
 	*/
-	public static function init($vendor=null) {
-		if ( !empty($vendor) ) self::$vendor = $vendor;
+	public static function init($options=[]) {
+		// fix param
+		if ( is_string($options) ) $options = array('vendor' => $options);
+		// default options
+		if ( empty($options['vendor']) ) $options['vendor'] = 'redbean';
+		if ( !isset($options['class_alias']) ) $options['class_alias'] = 'O';
+		// update corresponding property
+		self::$vendor = $options['vendor'];
+		// define class alias (when necessary)
+		if ( !empty($options['class_alias']) ) class_alias(__CLASS__, $options['class_alias']);
 		// validation
 		$className = __CLASS__.'__'.self::$vendor;
 		if ( !class_exists($className) ) {
@@ -298,7 +311,3 @@ class ORM implements ORM__Interface {
 
 
 } // class
-
-
-// define alias
-class_alias('ORM', 'O');
