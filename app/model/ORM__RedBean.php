@@ -193,7 +193,7 @@ class ORM__RedBean implements ORM__Interface {
 		// run method according to nature of query
 		try {
 			$sql = trim($sql);
-			if ( $operation != 'SELECT' ) $result = R::exec($sql, $param);
+			if ( in_array($operation, ['INSERT','UPDATE','DELETE']) ) $result = R::exec($sql, $param);
 			elseif ( $return == 'row' ) $result = R::getRow($sql, $param);
 			elseif ( $return == 'cell' ) $result = R::getCell($sql, $param);
 			elseif ( in_array($return, ['col','column']) ) $result = R::getCol($sql, $param);
