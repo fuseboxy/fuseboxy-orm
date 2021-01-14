@@ -70,6 +70,14 @@ class ORM__Generic implements ORM__Interface {
 	}
 
 
+	// close connection
+	public static function destroy() {
+		if ( self::$conn ) mysqli_close(self::$conn);
+		self::$conn = null;
+		return true;
+	}
+
+
 	// get all records
 	public static function all($beanType, $order) {
 		return self::query("SELECT * FROM `{$beanType}` {$order} ");

@@ -84,6 +84,19 @@ class ORM__RedBean implements ORM__Interface {
 	}
 
 
+	// close connection
+	public static function destroy() {
+		try {
+			R::close();
+		} catch (Exception $e) {
+			self::$error = $e->getMessage();
+			return false;
+		}
+		self::$isReady = false;
+		return true;
+	}
+
+
 	// get all records
 	public static function all($beanType, $order) {
 		if ( self::init() === false ) return false;

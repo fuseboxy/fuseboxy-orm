@@ -145,6 +145,23 @@ class ORM implements ORM__Interface {
 	/**
 	<fusedoc>
 		<description>
+			close connection
+		</description>
+		<io>
+			<in />
+			<out>
+				<boolean name="~return~" />
+			</out>
+		</io>
+	</fusedoc>
+	*/
+	public static function destroy() { return self::invoke(__FUNCTION__); }
+
+
+
+	/**
+	<fusedoc>
+		<description>
 			count number of records accorrding to criteria (if any)
 		</description>
 		<io>

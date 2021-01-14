@@ -3,6 +3,7 @@ interface ORM__Interface {
 
 	public static function error();
 	public static function init();
+	public static function destroy();
 	public static function all($beanType, $order);
 	public static function columns($beanType);
 	public static function count($beanType, $filter, $param);
