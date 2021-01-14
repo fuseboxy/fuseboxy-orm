@@ -13,6 +13,62 @@ class ORM implements ORM__Interface {
 	public static function vendor() { return self::$vendor; }
 
 
+
+
+	/**
+	<fusedoc>
+	    <description>
+	        invoke method of corresponding vendor class (with dynamic number of arguments)
+	    </description>
+	    <io>
+	        <in>
+	        	<string name="$method" />
+	        	<array name="$args" optional="yes">
+	        		<mixed name="+" />
+	        	</array>
+	        </in>
+	        <out>
+	            <boolean name="~return~" />
+	        </out>
+	    </io>
+	</fusedoc>
+	*/
+	public static function invoke($method, $args=[]) {
+		$class = __CLASS__.'__'.self::vendor();
+		// validation
+		if ( !class_exists($class) ) {
+			self::$error = "Class [{$class}] not exists";
+			return false;
+		} elseif ( !method_exists($class, $method) ) {
+			self::$error = "Method [{$class}::{$method}] not exists";
+			return false;
+		}
+		// call method with arguments
+		switch ( count($args) ) {
+			case  0: $result = $class::$method(); break;
+			case  1: $result = $class::$method($args[0]); break;
+			case  2: $result = $class::$method($args[0], $args[1]); break;
+			case  3: $result = $class::$method($args[0], $args[1], $args[2]); break;
+			case  4: $result = $class::$method($args[0], $args[1], $args[2], $args[3]); break;
+			case  5: $result = $class::$method($args[0], $args[1], $args[2], $args[3], $args[4]); break;
+			case  6: $result = $class::$method($args[0], $args[1], $args[2], $args[3], $args[4], $args[5]); break;
+			case  7: $result = $class::$method($args[0], $args[1], $args[2], $args[3], $args[4], $args[5], $args[6]); break;
+			case  8: $result = $class::$method($args[0], $args[1], $args[2], $args[3], $args[4], $args[5], $args[6], $args[7]); break;
+			case  9: $result = $class::$method($args[0], $args[1], $args[2], $args[3], $args[4], $args[5], $args[6], $args[7], $args[8]); break;
+			default: self::$error = 'Please enhance [ORM::invoke] method to allow more arguments to pass through'; return false;
+		}
+		// validation
+		if ( $result === false ) {
+			self::$error = $class::error();
+			return false;
+		}
+		// done!
+		return $result;
+	}
+
+
+
+
 	/**
 	<fusedoc>
 		<description>
@@ -48,8 +104,10 @@ class ORM implements ORM__Interface {
 			return false;
 		}
 		// done!
-		return call_user_func($className.'::'.__FUNCTION__);
+		return self::invoke(__FUNCTION__);
 	}
+
+
 
 
 	/**
@@ -70,9 +128,9 @@ class ORM implements ORM__Interface {
 		</io>
 	</fusedoc>
 	*/
-	public static function all($beanType, $sql='ORDER BY id') {
-		return call_user_func(__CLASS__.'__'.self::$vendor.'::'.__FUNCTION__, $beanType, $sql);
-	}
+	public static function all($beanType, $sql='ORDER BY id') { return self::invoke(__FUNCTION__, func_get_args()); }
+
+
 
 
 	/**
@@ -92,9 +150,9 @@ class ORM implements ORM__Interface {
 		</io>
 	</fusedoc>
 	*/
-	public static function columns($beanType) {
-		return call_user_func(__CLASS__.'__'.self::$vendor.'::'.__FUNCTION__, $beanType);
-	}
+	public static function columns($beanType) { return self::invoke(__FUNCTION__, func_get_args()); }
+
+
 
 
 	/**
@@ -114,9 +172,9 @@ class ORM implements ORM__Interface {
 		</io>
 	</fusedoc>
 	*/
-	public static function count($beanType, $sql='', $param=[]) {
-		return call_user_func(__CLASS__.'__'.self::$vendor.'::'.__FUNCTION__, $beanType, $sql, $param);
-	}
+	public static function count($beanType, $sql='', $param=[]) { return self::invoke(__FUNCTION__, func_get_args()); }
+
+
 
 
 	/**
@@ -134,9 +192,9 @@ class ORM implements ORM__Interface {
 		</io>
 	</fusedoc>
 	*/
-	public static function delete($bean) {
-		return call_user_func(__CLASS__.'__'.self::$vendor.'::'.__FUNCTION__, $bean);
-	}
+	public static function delete($bean) { return self::invoke(__FUNCTION__, func_get_args()); }
+
+
 
 
 	/**
@@ -156,9 +214,10 @@ class ORM implements ORM__Interface {
 		</io>
 	</fusedoc>
 	*/
-	public static function first($beanType, $sql='', $param=[]) {
-		return call_user_func(__CLASS__.'__'.self::$vendor.'::'.__FUNCTION__, $beanType, $sql, $param);
-	}
+	public static function first($beanType, $sql='', $param=[]) { return self::invoke(__FUNCTION__, func_get_args()); }
+	public static function one($beanType, $sql='', $param=[]) { return self::first($beanType, $sql, $param); }
+
+
 
 
 	/**
@@ -184,9 +243,9 @@ class ORM implements ORM__Interface {
 		</io>
 	</fusedoc>
 	*/
-	public static function get($beanType, $sqlOrID='', $param=[]) {
-		return call_user_func(__CLASS__.'__'.self::$vendor.'::'.__FUNCTION__, $beanType, $sqlOrID, $param);
-	}
+	public static function get($beanType, $sqlOrID='', $param=[]) { return self::invoke(__FUNCTION__, func_get_args()); }
+
+
 
 
 	/**
@@ -204,9 +263,9 @@ class ORM implements ORM__Interface {
 		</io>
 	</fusedoc>
 	*/
-	public static function new($beanType, $data=[]) {
-		return call_user_func(__CLASS__.'__'.self::$vendor.'::'.__FUNCTION__, $beanType, $data);
-	}
+	public static function new($beanType, $data=[]) { return self::invoke(__FUNCTION__, func_get_args()); }
+
+
 
 
 	/**
@@ -238,9 +297,10 @@ class ORM implements ORM__Interface {
 		</io>
 	</fusedoc>
 	*/
-	public static function query($sql, $param=[], $return='all') {
-		return call_user_func(__CLASS__.'__'.self::$vendor.'::'.__FUNCTION__, $sql, $param);
-	}
+	public static function query($sql, $param=[], $return='all') { return self::invoke(__FUNCTION__, func_get_args()); }
+	public static function run($sql, $param=[], $return='all') { return self::query($sql, $param, $return); }
+
+
 
 
 	/**
@@ -258,9 +318,9 @@ class ORM implements ORM__Interface {
 		</io>
 	</fusedoc>
 	*/
-	public static function save($bean) {
-		return call_user_func(__CLASS__.'__'.self::$vendor.'::'.__FUNCTION__, $bean);
-	}
+	public static function save($bean) { return self::invoke(__FUNCTION__, func_get_args()); }
+
+
 
 
 	/**
@@ -278,9 +338,9 @@ class ORM implements ORM__Interface {
 		</io>
 	</fusedoc>
 	*/
-	public static function tables() {
-		return call_user_func(__CLASS__.'__'.self::$vendor.'::'.__FUNCTION__);
-	}
+	public static function tables() { return self::invoke(__FUNCTION__); }
+
+
 
 
 	/**
@@ -300,14 +360,7 @@ class ORM implements ORM__Interface {
 		</io>
 	</fusedoc>
 	*/
-	public static function slots($param) {
-		return implode(',', array_fill(0, count($param), '?'));
-	}
-
-
-	// alias methods
-	public static function one() { return call_user_func(__CLASS__.'::first', func_get_args()); }
-	public static function run() { return call_user_func(__CLASS__.'::query', func_get_args()); }
+	public static function slots($param) { return implode(',', array_fill(0, count($param), '?')); }
 
 
 } // class
