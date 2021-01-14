@@ -175,7 +175,8 @@ class ORM__RedBean implements ORM__Interface {
 		$sql = trim($sql);
 		$return = strtolower($return);
 		// determine operation
-		$operation = strtoupper( array_shift( explode(' ', $sql) ) );
+		$arr = explode(' ', $sql);
+		$operation = strtoupper(array_shift($arr));
 		// run method according to nature of query
 		try {
 			$sql = trim($sql);
