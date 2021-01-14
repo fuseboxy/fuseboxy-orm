@@ -44,20 +44,7 @@ class ORM implements ORM__Interface {
 			return false;
 		}
 		// call method with arguments
-		switch ( count($args) ) {
-			case  0: $result = $class::$method(); break;
-			case  1: $result = $class::$method($args[0]); break;
-			case  2: $result = $class::$method($args[0], $args[1]); break;
-			case  3: $result = $class::$method($args[0], $args[1], $args[2]); break;
-			case  4: $result = $class::$method($args[0], $args[1], $args[2], $args[3]); break;
-			case  5: $result = $class::$method($args[0], $args[1], $args[2], $args[3], $args[4]); break;
-			case  6: $result = $class::$method($args[0], $args[1], $args[2], $args[3], $args[4], $args[5]); break;
-			case  7: $result = $class::$method($args[0], $args[1], $args[2], $args[3], $args[4], $args[5], $args[6]); break;
-			case  8: $result = $class::$method($args[0], $args[1], $args[2], $args[3], $args[4], $args[5], $args[6], $args[7]); break;
-			case  9: $result = $class::$method($args[0], $args[1], $args[2], $args[3], $args[4], $args[5], $args[6], $args[7], $args[8]); break;
-			default: self::$error = 'Please enhance [ORM::invoke] method to allow more arguments to pass through'; return false;
-		}
-		// validation
+		$result = $class::$method(...$args);
 		if ( $result === false ) {
 			self::$error = $class::error();
 			return false;
