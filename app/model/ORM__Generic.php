@@ -202,7 +202,7 @@ class ORM__Generic implements ORM__Interface {
 			if ( $operation == 'INSERT' ) $result = $stmt->insert_id;
 			elseif ( in_array($operation, ['UPDATE','DELETE']) ) $result = $stmt->affected_rows;
 			elseif ( $return == 'row' ) $result = $qryResult->fetch_array(MYSQLI_ASSOC);
-			elseif ( $return == 'cell' ) $result = array_shift( $qryResult->fetch_array(MYSQLI_ASSOC) );
+			elseif ( $return == 'cell' ) { $row = $qryResult->fetch_array(MYSQLI_ASSOC); $result = empty($row) ? '' : array_shift($row); }
 			elseif ( in_array($return, ['col','column']) ) while ( $row = $qryResult->fetch_array(MYSQLI_ASSOC) ) $result[] = array_shift($row);
 			else while ( $row = $qryResult->fetch_array(MYSQLI_ASSOC) ) $result[] = $row;
 		// if any error...
