@@ -244,7 +244,7 @@ class ORM__Generic implements ORM__Interface {
 
 	// get name of all tables
 	public static function tables() {
-		return self::query('SHOW TABLES');
+		return self::query('SHOW TABLES', [], 'col');
 	}
 
 
