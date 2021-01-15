@@ -91,9 +91,11 @@ class ORM__Generic implements ORM__Interface {
 
 
 	// count number of records accorrding to criteria
-	public static function count($beanType, $filter, $param) {
-		$sql  = "SELECT COUNT(*) FROM `{$beanType}` ";
-		$sql .= ( stripos(trim($filter), 'ORDER') === 0 ) ? $filter : " WHERE {$filter} ";
+	public static function count($beanType, $filter='', $param=[]) {
+		$filter = trim($filter);
+		$firstWord = explode(' ', $filter, 2)[0];
+		if ( !empty($filter) and !in_array($firstWord, ['WHERE','ORDER','LIMIT']) ) $filter = 'WHERE '.$filter;
+		$sql = "SELECT COUNT(*) FROM `{$beanType}` {$filter} ";
 		return self::query($sql, $param, 'cell');
 	}
 
