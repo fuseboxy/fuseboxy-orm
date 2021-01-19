@@ -80,18 +80,17 @@ class ORM__Generic implements ORM__Interface {
 
 	// get all records
 	public static function all($beanType, $order) {
-		$result = array();
+		$beans = array();
 		// get data
 		$data = self::query("SELECT * FROM `{$beanType}` {$order} ");
 		if ( $data === false ) return false;
 		// turn into bean
 		foreach ( $data as $item ) {
-			$bean = self::new($beanType, $item);
-			if ( $bean === false ) return false;
-			$result[ $item['id'] ] = $bean;
+			$beans[ $item['id'] ] = self::new($beanType, $item);
+			if ( $beans[ $item['id'] ] === false ) return false;
 		}
 		// done!
-		return $result;
+		return $beans;
 	}
 
 
@@ -131,10 +130,17 @@ class ORM__Generic implements ORM__Interface {
 
 	// obtain first record according to the criteria
 	public static function first($beanType, $filter, $param) {
-		$sql  = "SELECT * FROM `{$beanType}` ";
-		$sql .= ( stripos(trim($filter), 'ORDER') === 0 ) ? $filter : " WHERE {$filter} ";
+		$filter = trim($filter);
+		$firstWord = explode(' ', $filter, 2)[0];
+		// prepare statement
+		$sql = "SELECT * FROM `{$beanType}` ";
+		if ( !empty($filter) and !in_array($firstWord, ['WHERE','ORDER']) ) $filter = 'WHERE '.$filter;
 		$sql .= " LIMIT 1 ";
-		return self::query($sql, $param, 'row');
+		// get data
+		$data = self::query($sql, $param, 'row');
+		if ( $data === false ) return false;
+		// turn into bean
+		return self::new($beanType, $data);
 	}
 
 
