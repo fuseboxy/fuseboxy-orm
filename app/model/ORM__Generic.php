@@ -80,17 +80,15 @@ class ORM__Generic implements ORM__Interface {
 
 	// get all records
 	public static function all($beanType, $order) {
-		$beans = array();
-		// get data
-		$data = self::query("SELECT * FROM `{$beanType}` {$order} ");
-		if ( $data === false ) return false;
-		// turn into bean
-		foreach ( $data as $item ) {
-			$beans[ $item['id'] ] = self::new($beanType, $item);
-			if ( $beans[ $item['id'] ] === false ) return false;
+		$order = trim($order);
+		$firstWord = strtoupper( explode(' ', $order, 2)[0] );
+		// validation
+		if ( !empty($order) and $firstWord != 'ORDER' ) {
+			self::$error = 'Only [ORDER BY] clause is allowed';
+			return false;
 		}
-		// done!
-		return $beans;
+		// get data
+		return self::get($beanType, $order, []);
 	}
 
 
@@ -103,7 +101,7 @@ class ORM__Generic implements ORM__Interface {
 	// count number of records accorrding to criteria
 	public static function count($beanType, $filter='', $param=[]) {
 		$filter = trim($filter);
-		$firstWord = explode(' ', $filter, 2)[0];
+		$firstWord = strtoupper( explode(' ', $filter, 2)[0] );
 		if ( !empty($filter) and !in_array($firstWord, ['WHERE','ORDER','LIMIT']) ) $filter = 'WHERE '.$filter;
 		$sql = "SELECT COUNT(*) FROM `{$beanType}` {$filter} ";
 		return self::query($sql, $param, 'cell');
@@ -131,12 +129,10 @@ class ORM__Generic implements ORM__Interface {
 	// obtain first record according to the criteria
 	public static function first($beanType, $filter, $param) {
 		$filter = trim($filter);
-		$firstWord = explode(' ', $filter, 2)[0];
-		// prepare statement
-		$sql = "SELECT * FROM `{$beanType}` ";
+		$firstWord = strtoupper( explode(' ', $filter, 2)[0] );
 		if ( !empty($filter) and !in_array($firstWord, ['WHERE','ORDER']) ) $filter = 'WHERE '.$filter;
-		$sql .= " LIMIT 1 ";
 		// get data
+		$sql = "SELECT * FROM `{$beanType}` {$filter} LIMIT 1 ";
 		$data = self::query($sql, $param, 'row');
 		if ( $data === false ) return false;
 		// turn into bean
@@ -150,9 +146,12 @@ class ORM__Generic implements ORM__Interface {
 		$result = array();
 		// get single record (when necessary)
 		if ( is_numeric($filterOrID) ) return self::getByID($beanType, $filterOrID);
+		// adjust filter
+		$filter = trim($filterOrID);
+		$firstWord = strtoupper( explode(' ', $filter, 2)[0] );
+		if ( !empty($filter) and !in_array($firstWord, ['WHERE','ORDER']) ) $filter = 'WHERE '.$filter;
 		// get multiple records
-		$sql  = "SELECT * FROM `{$beanType}` ";
-		$sql .= ( stripos(trim($filterOrID), 'ORDER') === 0 ) ? $filterOrID : " WHERE {$filterOrID} ";
+		$sql = "SELECT * FROM `{$beanType}` {$filter} ";
 		$data = self::query($sql, $param);
 		if ( $data === false ) return false;
 		// turn into bean
@@ -166,11 +165,11 @@ class ORM__Generic implements ORM__Interface {
 
 
 	// obtain specific record by ID
-	public static function getByID($beanType, $filterOrID, $param) {
-		$bean = self::first($beanType, 'id = ?', [ $filterOrID ]);
+	public static function getByID($beanType, $id) {
+		$bean = self::first($beanType, 'id = ?', [ $id ]);
 		if ( $bean === false ) return false;
 		if ( empty($bean->id) ) {
-			self::$error = "Record not found (id={$filterOrID})";
+			self::$error = "Record not found (id={$id})";
 			return false;
 		}
 		return $bean;
