@@ -81,8 +81,10 @@ class ORM__Generic implements ORM__Interface {
 	// get all records
 	public static function all($beanType, $order) {
 		$order = trim($order);
-		$firstWord = strtoupper( explode(' ', $order, 2)[0] );
+		// fix order clause
+		if ( empty($order) ) $order = 'ORDER BY id ASC';
 		// validation
+		$firstWord = strtoupper( explode(' ', $order, 2)[0] );
 		if ( !empty($order) and $firstWord != 'ORDER' ) {
 			self::$error = 'Only [ORDER BY] clause is allowed';
 			return false;
