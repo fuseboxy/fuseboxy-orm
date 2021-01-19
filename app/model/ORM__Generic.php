@@ -80,7 +80,18 @@ class ORM__Generic implements ORM__Interface {
 
 	// get all records
 	public static function all($beanType, $order) {
-		return self::query("SELECT * FROM `{$beanType}` {$order} ");
+		$result = array();
+		// get data
+		$data = self::query("SELECT * FROM `{$beanType}` {$order} ");
+		if ( $data === false ) return false;
+		// turn into bean
+		foreach ( $data as $item ) {
+			$bean = self::new($beanType, $item);
+			if ( $bean === false ) return false;
+			$result[ $item['id'] ] = $bean;
+		}
+		// done!
+		return $result;
 	}
 
 
@@ -162,7 +173,7 @@ class ORM__Generic implements ORM__Interface {
 				self::$error = 'Data must be associative array';
 				return false;
 			// check simple value
-			} elseif ( !is_string($val) and !is_numeric($val) and !is_bool($val) ) {
+			} elseif ( !is_string($val) and !is_numeric($val) and !is_bool($val) and !empty($val) ) {
 				self::$error = "Field [{$key}] must be simple value";
 				return false;
 			// import
