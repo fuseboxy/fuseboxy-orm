@@ -148,23 +148,32 @@ class ORM__Generic implements ORM__Interface {
 	// obtain multiple records according to criteria
 	public static function get($beanType, $filterOrID, $param) {
 		$result = array();
-		// get multiple records, or...
-		if ( !is_numeric($filterOrID) ) {
-			$sql  = "SELECT * FROM `{$beanType}` ";
-			$sql .= ( stripos(trim($filterOrID), 'ORDER') === 0 ) ? $filterOrID : " WHERE {$filterOrID} ";
-			$data = self::query($sql, $param);
-			if ( $data === false ) return false;
-			foreach ( $data as $row ) $result[ $row['id'] ] = self::new($beanType, $row);
-		}
-		// get specific record
-		$result = self::first($beanType, 'id = ?', [$filterOrID]);
-		// validation (when specific record)
-		if ( empty($result) ) {
-			self::$error = "Record not found (id={$filterOrID})";
-			return false;
+		// get single record (when necessary)
+		if ( is_numeric($filterOrID) ) return self::getByID($beanType, $filterOrID);
+		// get multiple records
+		$sql  = "SELECT * FROM `{$beanType}` ";
+		$sql .= ( stripos(trim($filterOrID), 'ORDER') === 0 ) ? $filterOrID : " WHERE {$filterOrID} ";
+		$data = self::query($sql, $param);
+		if ( $data === false ) return false;
+		// turn into bean
+		foreach ( $data as $row ) {
+			$result[ $row['id'] ] = self::new($beanType, $row);
+			if ( $result[ $row['id'] ] === false ) return false;
 		}
 		// done!
 		return $result;
+	}
+
+
+	// obtain specific record by ID
+	public static function getByID($beanType, $filterOrID, $param) {
+		$bean = self::first($beanType, 'id = ?', [ $filterOrID ]);
+		if ( $bean === false ) return false;
+		if ( empty($bean->id) ) {
+			self::$error = "Record not found (id={$filterOrID})";
+			return false;
+		}
+		return $bean;
 	}
 
 
