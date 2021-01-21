@@ -46,7 +46,7 @@ class ORM__RedBean implements ORM__Interface {
 			self::$error = "RedBeanPHP library is missing ({$path})";
 			return false;
 		}
-		require_once($path);
+		if ( !class_exists('R') ) require_once($path);
 		// load config
 		$dbConfig = F::config('db');
 		// default config
