@@ -105,7 +105,7 @@ class ORM implements ORM__Interface {
 		<io>
 			<in>
 				<string name="$beanType" />
-				<string name="$sql" />
+				<string name="$order" />
 			</in>
 			<out>
 				<structure name="~return~">
@@ -115,7 +115,7 @@ class ORM implements ORM__Interface {
 		</io>
 	</fusedoc>
 	*/
-	public static function all($beanType, $sql='ORDER BY id') { return self::invoke(__FUNCTION__, func_get_args()); }
+	public static function all($beanType, $order='ORDER BY id') { return self::invoke(__FUNCTION__, [$beanType, $order]); }
 
 
 
@@ -137,7 +137,7 @@ class ORM implements ORM__Interface {
 		</io>
 	</fusedoc>
 	*/
-	public static function columns($beanType) { return self::invoke(__FUNCTION__, func_get_args()); }
+	public static function columns($beanType) { return self::invoke(__FUNCTION__, [$beanType]); }
 
 
 
@@ -167,7 +167,7 @@ class ORM implements ORM__Interface {
 		<io>
 			<in>
 				<string name="$beanType" />
-				<string name="$sql" />
+				<string name="$filter" />
 				<string name="$param" />
 			</in>
 			<out>
@@ -176,7 +176,7 @@ class ORM implements ORM__Interface {
 		</io>
 	</fusedoc>
 	*/
-	public static function count($beanType, $sql='', $param=[]) { return self::invoke(__FUNCTION__, func_get_args()); }
+	public static function count($beanType, $filter='', $param=[]) { return self::invoke(__FUNCTION__, [$beanType, $filter, $param]); }
 
 
 
@@ -196,7 +196,7 @@ class ORM implements ORM__Interface {
 		</io>
 	</fusedoc>
 	*/
-	public static function delete($bean) { return self::invoke(__FUNCTION__, func_get_args()); }
+	public static function delete($bean) { return self::invoke(__FUNCTION__, [$bean]); }
 
 
 
@@ -209,7 +209,7 @@ class ORM implements ORM__Interface {
 		<io>
 			<in>
 				<string name="$beanType" />
-				<string name="$sql" />
+				<string name="$filter" />
 				<array name="$param" />
 			</in>
 			<out>
@@ -218,8 +218,8 @@ class ORM implements ORM__Interface {
 		</io>
 	</fusedoc>
 	*/
-	public static function first($beanType, $sql='', $param=[]) { return self::invoke(__FUNCTION__, func_get_args()); }
-	public static function one($beanType, $sql='', $param=[]) { return self::first($beanType, $sql, $param); }
+	public static function first($beanType, $filter='', $param=[]) { return self::invoke(__FUNCTION__, [$beanType, $filter, $param]); }
+	public static function one($beanType, $filter='', $param=[]) { return self::first($beanType, $sql, $param); }
 
 
 
@@ -233,7 +233,7 @@ class ORM implements ORM__Interface {
 		<io>
 			<in>
 				<string name="$beanType" />
-				<string_or_number name="$sqlOrID" />
+				<string_or_number name="$filterOrID" />
 				<array name="$param" />
 			</in>
 			<out>
@@ -247,7 +247,7 @@ class ORM implements ORM__Interface {
 		</io>
 	</fusedoc>
 	*/
-	public static function get($beanType, $sqlOrID='', $param=[]) { return self::invoke(__FUNCTION__, func_get_args()); }
+	public static function get($beanType, $filterOrID='', $param=[]) { return self::invoke(__FUNCTION__, [$beanType, $filterOrID, $param]); }
 
 
 
@@ -267,7 +267,7 @@ class ORM implements ORM__Interface {
 		</io>
 	</fusedoc>
 	*/
-	public static function new($beanType, $data=[]) { return self::invoke(__FUNCTION__, func_get_args()); }
+	public static function new($beanType, $data=[]) { return self::invoke(__FUNCTION__, [$beanType, $data]); }
 
 
 
@@ -301,7 +301,7 @@ class ORM implements ORM__Interface {
 		</io>
 	</fusedoc>
 	*/
-	public static function query($sql, $param=[], $return='all') { return self::invoke(__FUNCTION__, func_get_args()); }
+	public static function query($sql, $param=[], $return='all') { return self::invoke(__FUNCTION__, [$sql, $param, $return]); }
 	public static function run($sql, $param=[], $return='all') { return self::query($sql, $param, $return); }
 
 
@@ -322,7 +322,7 @@ class ORM implements ORM__Interface {
 		</io>
 	</fusedoc>
 	*/
-	public static function save($bean) { return self::invoke(__FUNCTION__, func_get_args()); }
+	public static function save($bean) { return self::invoke(__FUNCTION__, [$bean]); }
 
 
 

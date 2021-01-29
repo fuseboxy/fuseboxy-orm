@@ -101,7 +101,7 @@ class ORM__Generic implements ORM__Interface {
 
 
 	// count number of records accorrding to criteria
-	public static function count($beanType, $filter='', $param=[]) {
+	public static function count($beanType, $filter, $param) {
 		$filter = trim($filter);
 		$firstWord = strtoupper( explode(' ', $filter, 2)[0] );
 		if ( !empty($filter) and !in_array($firstWord, ['WHERE','ORDER','LIMIT']) ) $filter = 'WHERE '.$filter;
