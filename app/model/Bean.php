@@ -139,11 +139,11 @@ class Bean {
 		// go through each item and check group
 		foreach ( $beans as $bean ) {
 			// create empty container for this group
-			if ( !isset($result[$bean[$groupColumn]]) ) {
-				$result[$bean[$groupColumn]] = array();
+			if ( !isset($result[$bean->{$groupColumn}]) ) {
+				$result[$bean->{$groupColumn}] = array();
 			}
 			// put item into group
-			$result[$bean[$groupColumn]][$bean['id']] = $bean;
+			$result[$bean->{$groupColumn}][$bean->id] = $bean;
 		}
 		// result
 		return $result;
