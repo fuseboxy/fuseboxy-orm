@@ -260,7 +260,9 @@ class ORM__Generic implements ORM__Interface {
 		// prepare statement
 		if ( empty($bean->id) ) {
 			if ( isset($data['id']) ) unset($data['id']);  // remove ID when empty string
-			$sql = "INSERT INTO `{$bean->__type__}` (".implode(',', array_keys($data)).") VALUES (".ORM::slots($data).")";
+			$cols = array_keys($data);
+			foreach ( $cols as $key => $val ) $cols[$key] = "`{$val}`";
+			$sql = "INSERT INTO `{$bean->__type__}` (".implode(',', $cols).") VALUES (".ORM::slots($data).")";
 			$param = array_values($data);
 		} else {
 			$arr = array();
