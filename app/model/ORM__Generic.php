@@ -124,7 +124,7 @@ class ORM__Generic implements ORM__Interface {
 		$sql = "DELETE FROM `{$bean->__type__}` WHERE id = ? ";
 		$param = array($bean->id);
 		// done!
-		return self::query($sql, $param, 'cell');
+		return self::query($sql, $param, null);
 	}
 
 
@@ -267,7 +267,7 @@ class ORM__Generic implements ORM__Interface {
 			$param[] = $bean->id;
 		}
 		// done!
-		return self::query($sql, $param, 'cell');
+		return self::query($sql, $param, null);
 	}
 
 
