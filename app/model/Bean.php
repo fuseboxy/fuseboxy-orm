@@ -30,17 +30,20 @@ class Bean {
 	*/
 	public static function diff($bean1, $bean2) {
 		$result = '';
+		// convert format
+		if ( !is_array($bean1) ) $bean1 = self::export($bean1);
+		if ( !is_array($bean2) ) $bean1 = self::export($bean2);
 		// compare each properties of beans
 		$bean1_columns = self::getColumns($bean1);
 		$bean2_columns = self::getColumns($bean2);
 		$columns = array_merge($bean1_columns, $bean2_columns);
 		$columns = array_unique($columns);
 		foreach ( $columns as $col ) {
-			if ( $bean1->{$col} != $bean2->{$col} ) {
+			if ( $bean1[$col] != $bean2[$col] ) {
 				$result .= "[{$col}] ";
-				$result .= strlen($bean1->{$col}) ? $bean1->{$col} : '(empty)';
+				$result .= strlen($bean1[$col]) ? $bean1[$col] : '(empty)';
 				$result .= ' ===> ';
-				$result .= strlen($bean2->{$col}) ? $bean2->{$col} : '(empty)';
+				$result .= strlen($bean2[$col]) ? $bean2[$col] : '(empty)';
 				$result .= "\n";
 			}
 		}
@@ -99,8 +102,8 @@ class Bean {
 	public static function getColumns($bean) {
 		$result = array();
 		// simple value properties only
-		if ( !is_array($bean) ) $bean = self::export($bean);
-		foreach ( $bean as $key => $val ) if ( !is_array($val) ) $result[] = $key;
+		if ( !is_array($bean) ) $beanData = self::export($bean);
+		foreach ( $beanData as $key => $val ) if ( !is_array($val) ) $result[] = $key;
 		// return result
 		return $result;
 	}
@@ -169,7 +172,7 @@ class Bean {
 		$columns = self::getColumns($bean);
 		foreach ( $columns as $col ) {
 			$result .= "[{$col}] ";
-			$result .= strlen($bean->{$col}) ? $bean->{$col} : '(empty)';
+			$result .= strlen($bean[$col]) ? $bean[$col] : '(empty)';
 			$result .= "\n";
 		}
 		return trim($result);
