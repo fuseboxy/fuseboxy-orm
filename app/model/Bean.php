@@ -70,12 +70,10 @@ class Bean {
 	</fusedoc>
 	*/
 	public static function export($bean) {
-		// validate
-		if ( is_array($bean) ) return $bean;
 		// export right away (when redbean)
 		if ( method_exists($bean, 'export') ) return $bean->export();
 		// get object values & remove meta data
-		$result = get_object_vars($bean);
+		$result = is_array($bean) ? $bean : get_object_vars($bean);
 		if ( isset($result['__type__']) ) unset($result['__type__']);
 		// done!
 		return $result;
