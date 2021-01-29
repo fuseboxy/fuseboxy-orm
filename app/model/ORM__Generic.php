@@ -124,7 +124,7 @@ class ORM__Generic implements ORM__Interface {
 		$sql = "DELETE FROM `{$bean->__type__}` WHERE id = ? ";
 		$param = array($bean->id);
 		// done!
-		return self::query($sql, $param);
+		return self::query($sql, $param, 'cell');
 	}
 
 
@@ -154,7 +154,7 @@ class ORM__Generic implements ORM__Interface {
 		if ( !empty($filter) and !in_array($firstWord, ['WHERE','ORDER']) ) $filter = 'WHERE '.$filter;
 		// get multiple records
 		$sql = "SELECT * FROM `{$beanType}` {$filter} ";
-		$data = self::query($sql, $param);
+		$data = self::query($sql, $param, 'all');
 		if ( $data === false ) return false;
 		// turn into bean
 		foreach ( $data as $row ) {
@@ -203,7 +203,7 @@ class ORM__Generic implements ORM__Interface {
 
 
 	// run sql statement
-	public static function query($sql, $param=[], $return='all') {
+	public static function query($sql, $param, $return) {
 		if ( self::init() === false ) return false;
 		// container
 		$result = array();
@@ -267,7 +267,7 @@ class ORM__Generic implements ORM__Interface {
 			$param[] = $bean->id;
 		}
 		// done!
-		return self::query($sql, $param);
+		return self::query($sql, $param, 'cell');
 	}
 
 
