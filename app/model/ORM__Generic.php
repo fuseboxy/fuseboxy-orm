@@ -256,7 +256,7 @@ class ORM__Generic implements ORM__Interface {
 		unset($data['__type__']);
 		// prepare statement
 		if ( empty($bean->id) ) {
-			if ( isset($data['id']) ) unset($data['id']);
+			if ( isset($data['id']) ) unset($data['id']);  // remove ID when empty string
 			$sql = "INSERT INTO `{$bean->__type__}` (".implode(',', array_keys($data)).") VALUES (".ORM::slots($data).")";
 			$param = array_values($data);
 		} else {
@@ -266,8 +266,11 @@ class ORM__Generic implements ORM__Interface {
 			$param = array_values($data);
 			$param[] = $bean->id;
 		}
+		// get result
+		$operation = explode(' ', $sql, 2)[0];
+		$result = self::query($sql, $param, null);
 		// done!
-		return self::query($sql, $param, null);
+		return ( $operation == 'INSERT' ) ? $result : $bean->id;
 	}
 
 
