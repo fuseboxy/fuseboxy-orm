@@ -99,12 +99,8 @@ class Bean {
 	public static function getColumns($bean) {
 		$result = array();
 		// simple value properties only
-		if ( !is_array($bean) ) {
-			$bean = $bean->export();
-		}
-		foreach ( $bean as $key => $val ) {
-			if ( !is_array($val) ) $result[] = $key;
-		}
+		if ( !is_array($bean) ) $bean = self::export($bean);
+		foreach ( $bean as $key => $val ) if ( !is_array($val) ) $result[] = $key;
 		// return result
 		return $result;
 	}
