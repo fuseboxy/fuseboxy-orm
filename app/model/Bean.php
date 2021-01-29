@@ -70,6 +70,8 @@ class Bean {
 	</fusedoc>
 	*/
 	public static function export($bean) {
+		// validate
+		if ( is_array($bean) ) return $bean;
 		// export right away (when redbean)
 		if ( method_exists($bean, 'export') ) return $bean->export();
 		// get object values & remove meta data
@@ -102,7 +104,7 @@ class Bean {
 	public static function getColumns($bean) {
 		$result = array();
 		// simple value properties only
-		$beanData = is_array($bean) ? $bean : self::export($bean);
+		$beanData = self::export($bean);
 		foreach ( $beanData as $key => $val ) if ( !is_array($val) ) $result[] = $key;
 		// return result
 		return $result;
@@ -169,10 +171,10 @@ class Bean {
 	*/
 	public static function toString($bean) {
 		$result = '';
-		$columns = self::getColumns($bean);
-		foreach ( $columns as $col ) {
-			$result .= "[{$col}] ";
-			$result .= strlen($bean[$col]) ? $bean[$col] : '(empty)';
+		$beanData = self::export($bean);
+		foreach ( $beanData as $key => $val ) {
+			$result .= "[{$key}] ";
+			$result .= strlen($val) ? $val : '(empty)';
 			$result .= "\n";
 		}
 		return trim($result);
