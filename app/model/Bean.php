@@ -36,11 +36,11 @@ class Bean {
 		$columns = array_merge($bean1_columns, $bean2_columns);
 		$columns = array_unique($columns);
 		foreach ( $columns as $col ) {
-			if ( $bean1[$col] != $bean2[$col] ) {
+			if ( $bean1->{$col} != $bean2->{$col} ) {
 				$result .= "[{$col}] ";
-				$result .= strlen($bean1[$col]) ? $bean1[$col] : '(empty)';
+				$result .= strlen($bean1->{$col}) ? $bean1->{$col} : '(empty)';
 				$result .= ' ===> ';
-				$result .= strlen($bean2[$col]) ? $bean2[$col] : '(empty)';
+				$result .= strlen($bean2->{$col}) ? $bean2->{$col} : '(empty)';
 				$result .= "\n";
 			}
 		}
@@ -169,7 +169,7 @@ class Bean {
 		$columns = self::getColumns($bean);
 		foreach ( $columns as $col ) {
 			$result .= "[{$col}] ";
-			$result .= strlen($bean[$col]) ? $bean[$col] : '(empty)';
+			$result .= strlen($bean->{$col}) ? $bean->{$col} : '(empty)';
 			$result .= "\n";
 		}
 		return trim($result);
