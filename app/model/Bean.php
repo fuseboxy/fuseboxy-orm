@@ -54,6 +54,34 @@ class Bean {
 	/**
 	<fusedoc>
 		<description>
+			export bean from object to associative-array
+		</description>
+		<io>
+			<in>
+				<object name="$bean" />
+			</in>
+			<out>
+				<structure name="~return~" />
+			</out>
+		</io>
+	</fusedoc>
+	*/
+	public static function export($bean) {
+		// export right away (when redbean)
+		if ( method_exists($bean, 'export') ) return $bean->export();
+		// get object values & remove meta data
+		$result = get_object_vars($bean);
+		if ( isset($result['__type__']) ) unset($result['__type__']);
+		// done!
+		return $result;
+	}
+
+
+
+
+	/**
+	<fusedoc>
+		<description>
 			get columns of bean
 		</description>
 		<io>
