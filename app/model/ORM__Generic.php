@@ -215,9 +215,12 @@ class ORM__Generic implements ORM__Interface {
 		$operation = strtoupper(array_shift($arr));
 		// determine param types
 		$paramTypes = '';
-		foreach ( $param as $item ) {
-			if ( is_int($item) ) $paramTypes .= 'i';
-			elseif ( is_numeric($item) ) $paramTypes .= 'd';
+		foreach ( $param as $key => $val ) {
+			// fix value
+			if ( is_bool($val) ) $param[$key] = (int)$val;
+			// determine type
+			if ( is_int($val) ) $paramTypes .= 'i';
+			elseif ( is_numeric($val) ) $paramTypes .= 'd';
 			else $paramTypes .= 's';
 		}
 		// proceed to execute statement
