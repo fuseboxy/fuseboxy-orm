@@ -1,0 +1,157 @@
+<?php
+// generic bean helper
+class Bean {
+
+
+
+
+	// get latest error message
+	private static $error;
+	public static function error() { return self::$error; }
+
+
+
+
+	/**
+	<fusedoc>
+		<description>
+			compare two objects and return string showing the differences
+		</description>
+		<io>
+			<in>
+				<object name="$bean1" />
+				<object name="$bean2" />
+			</in>
+			<out>
+				<string name="~return~" />
+			</out>
+		</io>
+	</fusedoc>
+	*/
+	public static function diff($bean1, $bean2) {
+		$result = '';
+		// compare each properties of beans
+		$bean1_columns = self::getColumns($bean1);
+		$bean2_columns = self::getColumns($bean2);
+		$columns = array_merge($bean1_columns, $bean2_columns);
+		$columns = array_unique($columns);
+		foreach ( $columns as $col ) {
+			if ( $bean1[$col] != $bean2[$col] ) {
+				$result .= "[{$col}] ";
+				$result .= strlen($bean1[$col]) ? $bean1[$col] : '(empty)';
+				$result .= ' ===> ';
+				$result .= strlen($bean2[$col]) ? $bean2[$col] : '(empty)';
+				$result .= "\n";
+			}
+		}
+		// result
+		return trim($result);
+	}
+
+
+
+
+	/**
+	<fusedoc>
+		<description>
+			get columns of bean
+		</description>
+		<io>
+			<in>
+				<object name="$bean" />
+			</in>
+			<out>
+				<array name="~return~">
+					<string name="+" />
+				</array>
+			</out>
+		</io>
+	</fusedoc>
+	*/
+	public static function getColumns($bean) {
+		$result = array();
+		// simple value properties only
+		if ( !is_array($bean) ) {
+			$bean = $bean->export();
+		}
+		foreach ( $bean as $key => $val ) {
+			if ( !is_array($val) ) $result[] = $key;
+		}
+		// return result
+		return $result;
+	}
+
+
+
+
+	/**
+	<fusedoc>
+		<description>
+			transform records into multi-level array
+		</description>
+		<io>
+			<in>
+				<string name="$groupColumn" />
+				<structure name="$beans">
+					<object name="~id~" />
+				</structure>
+			</in>
+			<out>
+				<structure name="~return~">
+					<structure name="~groupColumnValue~">
+						<object name="~id~" />
+					</structure>
+				</structure>
+			</out>
+		</io>
+	</fusedoc>
+	*/
+	public static function groupBy($groupColumn, $beans) {
+		// empty result container
+		$result = array();
+		// go through each item and check group
+		foreach ( $beans as $bean ) {
+			// create empty container for this group
+			if ( !isset($result[$bean[$groupColumn]]) ) {
+				$result[$bean[$groupColumn]] = array();
+			}
+			// put item into group
+			$result[$bean[$groupColumn]][$bean['id']] = $bean;
+		}
+		// result
+		return $result;
+	}
+
+
+
+
+	/**
+	<fusedoc>
+		<description>
+			convert bean to string
+		</description>
+		<io>
+			<in>
+				<object name="$bean" />
+			</in>
+			<out>
+				<string name="~return~" />
+			</out>
+		</io>
+	</fusedoc>
+	*/
+	public static function toString($bean) {
+		$result = '';
+		$columns = self::getColumns($bean);
+		foreach ( $columns as $col ) {
+			$result .= "[{$col}] ";
+			$result .= strlen($bean[$col]) ? $bean[$col] : '(empty)';
+			$result .= "\n";
+		}
+		return trim($result);
+	}
+
+
+
+
+} // Bean
