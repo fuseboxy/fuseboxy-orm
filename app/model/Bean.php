@@ -32,7 +32,7 @@ class Bean {
 		$result = '';
 		// convert format
 		if ( !is_array($bean1) ) $bean1 = self::export($bean1);
-		if ( !is_array($bean2) ) $bean1 = self::export($bean2);
+		if ( !is_array($bean2) ) $bean2 = self::export($bean2);
 		// compare each properties of beans
 		$bean1_columns = self::getColumns($bean1);
 		$bean2_columns = self::getColumns($bean2);
