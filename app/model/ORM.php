@@ -9,7 +9,7 @@ class ORM implements ORM__Interface {
 
 
 	// get vendor of ORM
-	private static $vendor;
+	private static $vendor = 'redbean';
 	public static function vendor() { return self::$vendor; }
 
 
@@ -65,7 +65,7 @@ class ORM implements ORM__Interface {
 			<in>
 				<string name="$options" optional="yes" comments="vendor" />
 				<structure name="$options" optional="yes">
-					<string name="vendor" optional="yes" default="redbean" />
+					<string name="vendor" optional="yes" />
 					<string name="class_alias" optional="yes" default="O" />
 				</structure>
 			<out>
@@ -78,10 +78,9 @@ class ORM implements ORM__Interface {
 		// fix param
 		if ( is_string($options) ) $options = array('vendor' => $options);
 		// default options
-		if ( empty($options['vendor']) ) $options['vendor'] = 'redbean';
 		if ( !isset($options['class_alias']) ) $options['class_alias'] = 'O';
-		// update corresponding property
-		self::$vendor = $options['vendor'];
+		// update corresponding property (when necessary)
+		if ( !empty($options['vendor']) ) self::$vendor = $options['vendor'];
 		// define class alias (when necessary)
 		if ( !empty($options['class_alias']) and !class_exists($options['class_alias']) ) class_alias(__CLASS__, $options['class_alias']);
 		// validation
