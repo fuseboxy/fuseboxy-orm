@@ -1,6 +1,5 @@
 <?php
-require_once 'ORM__Interface.php';
-class ORM__RedBean implements ORM__Interface {
+class ORM__RedBean implements iORM {
 
 
 	// properties

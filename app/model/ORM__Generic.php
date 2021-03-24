@@ -1,6 +1,5 @@
 <?php
-require_once 'ORM__Interface.php';
-class ORM__Generic implements ORM__Interface {
+class ORM__Generic implements iORM {
 
 
 	// properties

@@ -1,6 +1,5 @@
 <?php
-require_once 'ORM__Interface.php';
-class ORM implements ORM__Interface {
+class ORM implements iORM {
 
 
 	// get (latest) error message

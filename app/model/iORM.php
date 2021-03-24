@@ -1,5 +1,5 @@
 <?php
-interface ORM__Interface {
+interface iORM {
 
 	public static function error();
 	public static function init();
