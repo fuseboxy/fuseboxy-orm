@@ -211,7 +211,7 @@ class ORM__Generic implements iORM {
 		$sql = trim($sql);
 		$return = strtolower($return);
 		// determine operation
-		$arr = explode(' ', $sql);
+		$arr = array_map('trim', explode(' ', str_replace("\n", ' ', $sql)));
 		$operation = strtoupper(array_shift($arr));
 		// determine param types
 		$paramTypes = '';
