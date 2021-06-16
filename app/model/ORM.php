@@ -1,5 +1,7 @@
 <?php
 require_once 'iORM.php';
+require_once 'ORM__Generic.php';
+require_once 'ORM__RedBean.php';
 class ORM implements iORM {
 
 
