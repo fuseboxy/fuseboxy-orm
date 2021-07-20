@@ -1,11 +1,11 @@
 <?php
 require_once 'iORM.php';
+require_once dirname(dirname(__DIR__)).'/lib/redbeanphp/5.3.1/rb.php';
 class ORM__RedBean implements iORM {
 
 
 	// properties
 	private static $isReady = false;
-	private static $libPath = __DIR__.'/../../lib/redbeanphp/5.3.1/rb.php';
 
 
 	// get (latest) error message
@@ -40,13 +40,6 @@ class ORM__RedBean implements iORM {
 	public static function init() {
 		// check status
 		if ( self::$isReady ) return true;
-		// load library
-		$path = self::$libPath;
-		if ( !is_file($path) ) {
-			self::$error = "RedBeanPHP library is missing ({$path})";
-			return false;
-		}
-		if ( !class_exists('R') ) require_once($path);
 		// load config
 		$dbConfig = F::config('db');
 		// default config
