@@ -164,6 +164,22 @@ class ORM__RedBean implements iORM {
 		// create container & import data
 		try {
 			$bean = R::dispense($beanType);
+			// validation
+			if ( !empty($data) ) foreach ( $data as $key => $val ) {
+				// check key
+				if ( is_numeric($key) ) {
+					self::$error = 'Data must be associative array';
+					return false;
+				// check simple value
+				} elseif ( is_array($val) or is_object($val) ) {
+					self::$error = "Field [{$key}] must be simple value";
+					return false;
+				// import
+				} else {
+					$bean->{$key} = is_bool($val) ? (int)$val : $val;
+				}
+			}
+			// import data
 			if ( !empty($data) ) $bean->import($data);
 		} catch (Exception $e) {
 			self::$error = $e->getMessage();

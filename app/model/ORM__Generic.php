@@ -189,7 +189,7 @@ class ORM__Generic implements iORM {
 				self::$error = 'Data must be associative array';
 				return false;
 			// check simple value
-			} elseif ( !is_string($val) and !is_numeric($val) and !is_bool($val) and !empty($val) ) {
+			} elseif ( is_array($val) or is_object($val) ) {
 				self::$error = "Field [{$key}] must be simple value";
 				return false;
 			// import
