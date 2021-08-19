@@ -19,20 +19,20 @@ class ORM implements iORM {
 
 	/**
 	<fusedoc>
-	    <description>
-	        invoke method of corresponding vendor class (with dynamic number of arguments)
-	    </description>
-	    <io>
-	        <in>
-	        	<string name="$method" />
-	        	<array name="$args" optional="yes">
-	        		<mixed name="+" />
-	        	</array>
-	        </in>
-	        <out>
-	            <boolean name="~return~" />
-	        </out>
-	    </io>
+		<description>
+		invoke method of corresponding vendor class (with dynamic number of arguments)
+		</description>
+		<io>
+			<in>
+				<string name="$method" />
+				<array name="$args" optional="yes">
+					<mixed name="+" />
+				</array>
+			</in>
+			<out>
+				<boolean name="~return~" />
+			</out>
+		</io>
 	</fusedoc>
 	*/
 	public static function invoke($method, $args=[]) {
