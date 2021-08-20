@@ -96,7 +96,14 @@ class ORM__Generic implements iORM {
 
 	// get columns of specific table
 	public static function columns($beanType) {
-		return self::query("SHOW COLUMNS FROM `{$beanType}` ", [], 'col');
+		$result = array();
+		// get column info
+		$data = self::query("SHOW COLUMNS FROM `{$beanType}` ");
+		if ( $data === false ) return false;
+		// move to result container
+		foreach ( $data as $item ) $result[$item['Field']] = $item['Type'];
+		// done!
+		return $result;
 	}
 
 

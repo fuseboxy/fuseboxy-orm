@@ -131,9 +131,9 @@ class ORM implements iORM {
 				<string name="$beanType" />
 			</in>
 			<out>
-				<array name="~return~">
-					<string name="+" />
-				</array>
+				<structure name="~return~">
+					<string name="~columnName~" value="~columnType~" />
+				</structure>
 			</out>
 		</io>
 	</fusedoc>
