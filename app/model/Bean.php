@@ -3,8 +3,6 @@
 class Bean {
 
 
-
-
 	// get latest error message
 	private static $error;
 	public static function error() { return self::$error; }
@@ -177,8 +175,6 @@ class Bean {
 		}
 		return trim($result);
 	}
-
-
 
 
 } // Bean
