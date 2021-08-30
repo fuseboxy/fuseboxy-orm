@@ -1,7 +1,16 @@
 {
 	"name": "fuseboxy/fuseboxy-orm",
-	"description": "Fuseboxy ORM",
+	"description": "Fuseboxy ORM - No More SQL",
 	"license": "MIT",
 	"type": "fuseboxy-module",
-	"require": { "fuseboxy/fuseboxy-installer": "*" }
+	"require": { "fuseboxy/fuseboxy-installer": "*" },
+	"autoload": {
+		"files": [
+			"app/model/Bean.php",
+			"app/model/iORM.php",
+			"app/model/ORM.php",
+			"app/model/ORM__Generic.php",
+			"app/model/ORM__RedBean.php"
+		]
+	}
 }
