@@ -355,7 +355,7 @@ class ORM implements iORM {
 		</description>
 		<io>
 			<in>
-				<array name="$param" />
+				<array_or_number name="$param" />
 			</in>
 			<out>
 				<list name="~return~" delim=",">
@@ -365,7 +365,7 @@ class ORM implements iORM {
 		</io>
 	</fusedoc>
 	*/
-	public static function slots($param) { return implode(',', array_fill(0, count($param), '?')); }
+	public static function slots($param) { return implode(',', array_fill(0, is_numeric($param) ? $param : count($param), '?')); }
 
 
 } // class
