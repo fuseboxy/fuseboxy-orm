@@ -187,8 +187,8 @@ class Bean {
 		<io>
 			<in>
 				<object name="$bean">
-					<string name="__type__" optional="yes" oncondition="generic" />
 					<string name="getMeta('type')" optional="yes" oncondition="redbean" />
+					<string name="__type__" optional="yes" oncondition="generic" />
 				</object>
 			</in>
 			<out>
@@ -198,7 +198,7 @@ class Bean {
 	</fusedoc>
 	*/
 	public static function type($bean) {
-		return method_exists($bean, 'getMeta') ? $bean->getMeta('type') : $bean->__type__;
+		return method_exists($bean, 'getMeta') ? $bean->getMeta('type') : ( $bean->__type__ ?? null );
 	}
 
 
