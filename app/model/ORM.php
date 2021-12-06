@@ -256,11 +256,14 @@ class ORM implements iORM {
 	/**
 	<fusedoc>
 		<description>
-			create empty new container (preload data when specified)
+			create empty new item (preload data when specified)
 		</description>
 		<io>
 			<in>
 				<string name="$beanType" />
+				<structure name="$data" optional="yes">
+					<mixed name="~columnName~" />
+				</structure>
 			</in>
 			<out>
 				<object name="~return~" />
@@ -324,6 +327,33 @@ class ORM implements iORM {
 	</fusedoc>
 	*/
 	public static function save($bean) { return self::invoke(__FUNCTION__, [$bean]); }
+
+
+
+
+	/**
+	<fusedoc>
+		<description>
+			create empty new item & save
+		</description>
+		<io>
+			<in>
+				<string name="$beanType" />
+				<structure name="$data" optional="yes">
+					<mixed name="~columnName~" />
+				</structure>
+			</in>
+			<out>
+				<number name="~return~" comments="last-insert-id" />
+			</out>
+		</io>
+	</fusedoc>
+	*/
+	public static function saveNew($beanType, $data=[]) {
+		$item = self::new($beanType, $data);
+		if ( $item === false ) return false;
+		return self::save($item);
+	}
 
 
 
