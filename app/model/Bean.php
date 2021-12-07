@@ -37,11 +37,13 @@ class Bean {
 		$columns = array_merge($bean1_columns, $bean2_columns);
 		$columns = array_unique($columns);
 		foreach ( $columns as $col ) {
-			if ( $bean1[$col] != $bean2[$col] ) {
+			$bean1_col = $bean1[$col] ?? '';
+			$bean2_col = $bean2[$col] ?? '';
+			if ( $bean1_col != $bean2_col ) {
 				$result .= "[{$col}] ";
-				$result .= strlen($bean1[$col]) ? $bean1[$col] : '(empty)';
+				$result .= strlen($bean1_col) ? $bean1_col : '(empty)';
 				$result .= ' ===> ';
-				$result .= strlen($bean2[$col]) ? $bean2[$col] : '(empty)';
+				$result .= strlen($bean2_col) ? $bean2_col : '(empty)';
 				$result .= "\n";
 			}
 		}
