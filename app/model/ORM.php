@@ -344,7 +344,7 @@ class ORM implements iORM {
 				</structure>
 			</in>
 			<out>
-				<number name="~return~" comments="last-insert-id" />
+				<object name="~return~" comments="last insert record" />
 			</out>
 		</io>
 	</fusedoc>
@@ -352,7 +352,9 @@ class ORM implements iORM {
 	public static function saveNew($beanType, $data=[]) {
 		$item = self::new($beanType, $data);
 		if ( $item === false ) return false;
-		return self::save($item);
+		$id = self::save($item);
+		if ( $id === false ) return false;
+		return self::get($beanType, $id);
 	}
 
 
