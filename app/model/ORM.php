@@ -220,7 +220,7 @@ class ORM implements iORM {
 	</fusedoc>
 	*/
 	public static function first($beanType, $filter='', $param=[]) { return self::invoke(__FUNCTION__, [$beanType, $filter, $param]); }
-	public static function one($beanType, $filter='', $param=[]) { return self::first($beanType, $sql, $param); }
+	public static function one($beanType, $filter='', $param=[]) { return self::first($beanType, $filter, $param); }
 
 
 
