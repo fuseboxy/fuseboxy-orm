@@ -1,4 +1,5 @@
 <?php
+require_once 'Bean.php';
 require_once 'iORM.php';
 require_once 'ORM__Generic.php';
 require_once 'ORM__RedBean.php';
@@ -128,7 +129,7 @@ class ORM implements iORM {
 		</description>
 		<io>
 			<in>
-				<string name="$beanType" />
+				<string_or_object name="$beanType" />
 			</in>
 			<out>
 				<structure name="~return~">
@@ -138,7 +139,18 @@ class ORM implements iORM {
 		</io>
 	</fusedoc>
 	*/
-	public static function columns($beanType) { return self::invoke(__FUNCTION__, [$beanType]); }
+	public static function columns($beanType) {
+		// when bean as param
+		if ( is_object($beanType) ) {
+			$beanType = Bean::type($beanType);
+			if ( $beanType === false ) {
+				self::$error = Bean::error();
+				return false;
+			}
+		}
+		// done!
+		return self::invoke(__FUNCTION__, [$beanType]);
+	}
 
 
 
@@ -326,7 +338,9 @@ class ORM implements iORM {
 		</io>
 	</fusedoc>
 	*/
-	public static function save($bean) { return self::invoke(__FUNCTION__, [$bean]); }
+	public static function save($bean) {
+		return self::invoke(__FUNCTION__, [$bean]);
+	}
 
 
 
