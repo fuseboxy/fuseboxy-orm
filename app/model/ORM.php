@@ -6,6 +6,10 @@ require_once 'ORM__RedBean.php';
 class ORM implements iORM {
 
 
+	// settings
+	public static $saveEmptyStringAsNull = true;
+
+
 	// get (latest) error message
 	private static $error;
 	public static function error() { return self::$error; }
@@ -330,6 +334,9 @@ class ORM implements iORM {
 		</description>
 		<io>
 			<in>
+				<!-- property -->
+				<boolean name="$saveEmptyStringAsNull" scope="self" />
+				<!-- parameter -->
 				<object name="$bean" />
 			</in>
 			<out>
@@ -339,6 +346,13 @@ class ORM implements iORM {
 	</fusedoc>
 	*/
 	public static function save($bean) {
+		// adjust data
+		if ( self::$saveEmptyStringAsNull ) {
+			$columns = self::columns($bean);
+			if ( $columns === false ) return false;
+			foreach ( $columns as $col ) if ( $bean->{$col} === '' ) $bean->{$col} = null;
+		}
+		// done!
 		return self::invoke(__FUNCTION__, [$bean]);
 	}
 
