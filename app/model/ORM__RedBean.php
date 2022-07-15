@@ -46,20 +46,20 @@ class ORM__RedBean implements iORM {
 		if ( empty($dbConfig['provider']) ) $dbConfig['provider'] = 'mysql';
 		// check config
 		if ( empty($dbConfig) ) {
-			self::$error = 'Database config is missing';
+			self::$error = '[ORM__RedBean::init] Database config is missing';
 			return false;
 		} elseif ( empty($dbConfig['host']) ) {
-			self::$error = 'Database config [host] is required';
+			self::$error = '[ORM__RedBean::init] Database config [host] is required';
 			return false;
 		} elseif ( empty($dbConfig['name']) ) {
-			self::$error = 'Database config [name] is required';
+			self::$error = '[ORM__RedBean::init] Database config [name] is required';
 			return false;
 		} elseif ( empty($dbConfig['username']) ) {
-			self::$error = 'Database config [username] is required';
+			self::$error = '[ORM__RedBean::init] Database config [username] is required';
 			return false;
 		// allow empty password but must be defined
 		} elseif ( !isset($dbConfig['password']) ) {
-			self::$error = 'Database config [password] is required';
+			self::$error = '[ORM__RedBean::init] Database config [password] is required';
 			return false;
 		}
 		// connect to database
@@ -67,7 +67,7 @@ class ORM__RedBean implements iORM {
 			R::setup($dbConfig['provider'].':host='.$dbConfig['host'].';dbname='.$dbConfig['name'], $dbConfig['username'], $dbConfig['password']);
 			if ( isset($dbConfig['freeze']) ) R::freeze($dbConfig['freeze']);
 		} catch (Exception $e) {
-			self::$error = $e->getMessage();
+			self::$error = '[ORM__RedBean::init] '.$e->getMessage();
 			return false;
 		}
 		// mark status
@@ -82,7 +82,7 @@ class ORM__RedBean implements iORM {
 		try {
 			R::close();
 		} catch (Exception $e) {
-			self::$error = $e->getMessage();
+			self::$error = '[ORM__RedBean::destroy] '.$e->getMessage();
 			return false;
 		}
 		self::$isReady = false;
@@ -104,7 +104,7 @@ class ORM__RedBean implements iORM {
 		try {
 			$result = R::getColumns($beanType);
 		} catch (Exception $e) {
-			self::$error = $e->getMessage();
+			self::$error = '[ORM__RedBean::columns] '.$e->getMessage();
 			return false;
 		}
 		// done!
@@ -126,7 +126,7 @@ class ORM__RedBean implements iORM {
 		try {
 			R::trash($bean);
 		} catch (Exception $e) {
-			self::$error = $e->getMessage();
+			self::$error = '[ORM__RedBean::delete] '.$e->getMessage();
 			return false;
 		}
 		// done!
@@ -150,7 +150,7 @@ class ORM__RedBean implements iORM {
 		// get specific record
 		$result = R::load($beanType, $filterOrID);
 		if ( empty($result->id) ) {
-			self::$error = "Record not found (id={$filterOrID})";
+			self::$error = "[ORM__RedBean::get] Record not found (id={$filterOrID})";
 			return false;
 		}
 		// done!
@@ -168,18 +168,18 @@ class ORM__RedBean implements iORM {
 			if ( !empty($data) ) foreach ( $data as $key => $val ) {
 				// check key
 				if ( is_numeric($key) ) {
-					self::$error = 'Import data must be associative array';
+					self::$error = '[ORM__RedBean::new] Import data must be associative array';
 					return false;
 				// check simple value
 				} elseif ( is_array($val) or is_object($val) ) {
-					self::$error = "Import data [{$key}] must be simple value";
+					self::$error = "[ORM__RedBean::new] Import data [{$key}] must be simple value";
 					return false;
 				}
 			}
 			// import data
 			if ( !empty($data) ) $bean->import($data);
 		} catch (Exception $e) {
-			self::$error = $e->getMessage();
+			self::$error = '[ORM__RedBean::new] '.$e->getMessage();
 			return false;
 		}
 		// done!
@@ -205,7 +205,7 @@ class ORM__RedBean implements iORM {
 			elseif ( in_array($return, ['col','column']) ) $result = R::getCol($sql, $param);
 			else $result = R::getAll($sql, $param);
 		} catch (Exception $e) {
-			self::$error = $e->getMessage();
+			self::$error = '[ORM__RedBean::query] '.$e->getMessage();
 			return false;
 		}
 		// done!
@@ -220,12 +220,12 @@ class ORM__RedBean implements iORM {
 		try {
 			$id = R::store($bean);
 		} catch (Exception $e) {
-			self::$error = $e->getMessage();
+			self::$error = '[ORM__RedBean::save] '.$e->getMessage();
 			return false;
 		}
 		// validation
 		if ( empty($id) ) {
-			self::$error = empty($bean->id) ? 'Error occurred while creating record' : "Error occurred while updating record (id={$bean->id})";
+			self::$error = empty($bean->id) ? '[ORM__RedBean::save] Error occurred while creating record' : "[ORM__RedBean::save] Error occurred while updating record (id={$bean->id})";
 			return false;
 		}
 		// done!

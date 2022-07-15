@@ -19,8 +19,8 @@ class ORM__Generic implements iORM {
 		</description>
 		<io>
 			<in>
-				<object name="$conn" scope="self" optional="yes" />
-				<structure name="config" scope="$fusebox">
+				<!-- config -->
+				<structure name="$fusebox->config|FUSEBOXY_DB">
 					<structure name="db">
 						<string name="host" />
 						<string name="name" />
@@ -28,6 +28,8 @@ class ORM__Generic implements iORM {
 						<string name="password" />
 					</structure>
 				</structure>
+				<!-- cache -->
+				<object name="$conn" scope="self" optional="yes" />
 			</in>
 			<out>
 				<object name="$conn" scope="self" optional="yes" />
@@ -43,26 +45,26 @@ class ORM__Generic implements iORM {
 		$dbConfig = F::config('db');
 		// check config
 		if ( empty($dbConfig) ) {
-			self::$error = 'Database config is missing';
+			self::$error = '[ORM__Generic::init] Database config is missing';
 			return false;
 		} elseif ( empty($dbConfig['host']) ) {
-			self::$error = 'Database config [host] is required';
+			self::$error = '[ORM__Generic::init] Database config [host] is required';
 			return false;
 		} elseif ( empty($dbConfig['name']) ) {
-			self::$error = 'Database config [name] is required';
+			self::$error = '[ORM__Generic::init] Database config [name] is required';
 			return false;
 		} elseif ( empty($dbConfig['username']) ) {
-			self::$error = 'Database config [username] is required';
+			self::$error = '[ORM__Generic::init] Database config [username] is required';
 			return false;
 		// allow empty password but must be defined
 		} elseif ( !isset($dbConfig['password']) ) {
-			self::$error = 'Database config [password] is required';
+			self::$error = '[ORM__Generic::init] Database config [password] is required';
 			return false;
 		}
 		// keep connection opened for this HTTP request
 		self::$conn = @mysqli_connect($dbConfig['host'], $dbConfig['username'], $dbConfig['password'], $dbConfig['name']);
 		if ( !self::$conn ) {
-			self::$error = 'Error occurred while connecting to MySQL : '.mysqli_connect_error().' ('.mysqli_connect_errno().')';
+			self::$error = '[ORM__Generic::init] Error occurred while connecting to MySQL : '.mysqli_connect_error().' ('.mysqli_connect_errno().')';
 			return false;
 		}
 		// done!
@@ -86,7 +88,7 @@ class ORM__Generic implements iORM {
 		// validation
 		$firstWord = strtoupper( explode(' ', $order, 2)[0] );
 		if ( !empty($order) and $firstWord != 'ORDER' ) {
-			self::$error = 'Only [ORDER BY] clause is allowed';
+			self::$error = '[ORM__Generic::all] Only [ORDER BY] clause is allowed';
 			return false;
 		}
 		// get data
@@ -121,10 +123,10 @@ class ORM__Generic implements iORM {
 	public static function delete($bean) {
 		// validation
 		if ( empty($bean->__type__) ) {
-			self::$error = 'Bean type is unknown';
+			self::$error = '[ORM__Generic::delete] Bean type is unknown';
 			return false;
 		} elseif ( empty($bean->id) ) {
-			self::$error = 'ID is empty';
+			self::$error = '[ORM__Generic::delete] ID is empty';
 			return false;
 		}
 		// prepare statement
@@ -178,7 +180,7 @@ class ORM__Generic implements iORM {
 		$bean = self::first($beanType, 'id = ?', [ $id ]);
 		if ( $bean === false ) return false;
 		if ( empty($bean->id) ) {
-			self::$error = "Record not found (id={$id})";
+			self::$error = "[ORM__Generic::getByID] Record not found (id={$id})";
 			return false;
 		}
 		return $bean;
@@ -193,11 +195,11 @@ class ORM__Generic implements iORM {
 		foreach ( $data as $key => $val ) {
 			// check key
 			if ( is_numeric($key) ) {
-				self::$error = 'Data must be associative array';
+				self::$error = '[ORM__Generic::new] Data must be associative array';
 				return false;
 			// check simple value
 			} elseif ( is_array($val) or is_object($val) ) {
-				self::$error = "Field [{$key}] must be simple value";
+				self::$error = "[ORM__Generic::new] Field [{$key}] must be simple value";
 				return false;
 			// import
 			} else {
@@ -246,7 +248,7 @@ class ORM__Generic implements iORM {
 			else while ( $row = $qryResult->fetch_array(MYSQLI_ASSOC) ) $result[] = $row;
 		// if any error...
 		} catch (Exception $e) {
-			self::$error = $e->getMessage();
+			self::$error = '[ORM__Generic::query] '.$e->getMessage();
 			return false;
 		}
 		// done!
@@ -258,7 +260,7 @@ class ORM__Generic implements iORM {
 	public static function save($bean) {
 		// validation
 		if ( empty($bean->__type__) ) {
-			self::$error = 'Bean type is unknown';
+			self::$error = '[ORM__Generic::save] Bean type is unknown';
 			return false;
 		}
 		// obtain data fields
