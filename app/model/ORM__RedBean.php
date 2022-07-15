@@ -95,7 +95,14 @@ class ORM__RedBean implements iORM {
 	// get all records
 	public static function all($beanType, $order) {
 		if ( self::init() === false ) return false;
-		return R::findAll($beanType, $order);
+		// proceed
+		try {
+			$result = R::findAll($beanType, $order);
+		} catch (Exception $e) {
+			self::$error = '[ORM__RedBean::all] '.$e->getMessage();
+			return false;
+		}
+		return $result;
 	}
 
 
@@ -117,7 +124,14 @@ class ORM__RedBean implements iORM {
 	// count number of records accorrding to criteria
 	public static function count($beanType, $filter, $param) {
 		if ( self::init() === false ) return false;
-		return R::count($beanType, $filter, $param);
+		// proceed
+		try {
+			$count = R::count($beanType, $filter, $param);
+		} catch (Exception $e) {
+			self::$error = '[ORM__RedBean::count] '.$e->getMessage();
+			return false;
+		}
+		return $count;
 	}
 
 
@@ -139,7 +153,15 @@ class ORM__RedBean implements iORM {
 	// obtain first record according to the criteria
 	public static function first($beanType, $filter, $param) {
 		if ( self::init() === false ) return false;
-		return R::findOne($beanType, $filter, $param);
+		// proceed
+		try {
+			$result = R::findOne($beanType, $filter, $param);
+		} catch (Exception $e) {
+			self::$error = '[ORM__RedBean::first] '.$e->getMessage();
+			return false;
+		}
+		// done!
+		return $result;
 	}
 
 
@@ -147,7 +169,7 @@ class ORM__RedBean implements iORM {
 	// obtain multiple records according to criteria
 	public static function get($beanType, $filterOrID, $param) {
 		if ( self::init() === false ) return false;
-		// get specific record or multiple records
+		// get single or multiple record(s)
 		try {
 			$result = is_numeric($filterOrID) ? R::load($beanType, $filterOrID) : R::find($beanType, $filterOrID, $param);
 		} catch (Exception $e) {
@@ -236,7 +258,13 @@ class ORM__RedBean implements iORM {
 
 	// get name of tables
 	public static function tables() {
-		return R::inspect();
+		try {
+			$result = R::inspect();
+		} catch (Exception $e) {
+			self::$error = '[ORM__RedBean::tables] '.$e->getMessage();
+			return false;
+		}
+		return $result;
 	}
 
 
