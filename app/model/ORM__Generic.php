@@ -32,7 +32,9 @@ class ORM__Generic implements iORM {
 				<object name="$conn" scope="self" optional="yes" />
 			</in>
 			<out>
+				<!-- cache -->
 				<object name="$conn" scope="self" optional="yes" />
+				<!-- return value -->
 				<boolean name="~return~" />
 			</out>
 		</io>
@@ -41,8 +43,9 @@ class ORM__Generic implements iORM {
 	public static function init() {
 		// check status
 		if ( self::$conn ) return true;
-		// load config
-		$dbConfig = F::config('db');
+		// load config (from framework or constant)
+		if ( class_exists('F') ) $dbConfig = F::config('db');
+		if ( empty($dbConfig) and defined('FUSEBOXY_DB') ) $dbConfig = FUSEBOXY_DB;
 		// check config
 		if ( empty($dbConfig) ) {
 			self::$error = '[ORM__Generic::init] Database config is missing';

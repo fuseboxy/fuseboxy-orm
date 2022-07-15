@@ -20,7 +20,8 @@ class ORM__RedBean implements iORM {
 		</description>
 		<io>
 			<in>
-				<structure name="config" scope="$fusebox">
+				<!-- config -->
+				<structure name="$fusebox->config|FUSEBOXY_DB">
 					<structure name="db">
 						<string name="provider" optional="yes" default="mysql" />
 						<string name="host" />
@@ -40,8 +41,9 @@ class ORM__RedBean implements iORM {
 	public static function init() {
 		// check status
 		if ( self::$isReady ) return true;
-		// load config
-		$dbConfig = F::config('db');
+		// load config (from framework or constant)
+		if ( class_exists('F') ) $dbConfig = F::config('db');
+		if ( empty($dbConfig) and defined('FUSEBOXY_DB') ) $dbConfig = FUSEBOXY_DB;
 		// default config
 		if ( empty($dbConfig['provider']) ) $dbConfig['provider'] = 'mysql';
 		// check config
