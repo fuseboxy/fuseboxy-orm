@@ -350,7 +350,7 @@ class ORM implements iORM {
 		if ( self::$saveEmptyStringAsNull ) {
 			$columns = self::columns($bean);
 			if ( $columns === false ) return false;
-			foreach ( $columns as $col ) if ( $bean->{$col} === '' ) $bean->{$col} = null;
+			foreach ( $columns as $col => $type ) if ( $bean->{$col} === '' ) $bean->{$col} = null;
 		}
 		// done!
 		return self::invoke(__FUNCTION__, [$bean]);
