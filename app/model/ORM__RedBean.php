@@ -43,7 +43,7 @@ class ORM__RedBean implements iORM {
 		if ( self::$isReady ) return true;
 		// load config (from framework or constant)
 		if ( class_exists('F') ) $dbConfig = F::config('db');
-		if ( empty($dbConfig) and defined('FUSEBOXY_ORM_DB') ) $dbConfig = FUSEBOXY_ORM_DB;
+		elseif ( defined('FUSEBOXY_ORM_DB') ) $dbConfig = FUSEBOXY_ORM_DB;
 		// default config
 		if ( empty($dbConfig['provider']) ) $dbConfig['provider'] = 'mysql';
 		// check config

@@ -45,7 +45,7 @@ class ORM__Generic implements iORM {
 		if ( self::$conn ) return true;
 		// load config (from framework or constant)
 		if ( class_exists('F') ) $dbConfig = F::config('db');
-		if ( empty($dbConfig) and defined('FUSEBOXY_ORM_DB') ) $dbConfig = FUSEBOXY_ORM_DB;
+		elseif ( defined('FUSEBOXY_ORM_DB') ) $dbConfig = FUSEBOXY_ORM_DB;
 		// check config
 		if ( empty($dbConfig) ) {
 			self::$error = '[ORM__Generic::init] Database config is missing';
