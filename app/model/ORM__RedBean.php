@@ -21,7 +21,7 @@ class ORM__RedBean implements iORM {
 		<io>
 			<in>
 				<!-- config -->
-				<structure name="$fusebox->config[db]|FUSEBOXY_ORM_DB">
+				<structure name="$fusebox->config['db']|FUSEBOXY_ORM_DB">
 					<string name="provider" optional="yes" default="mysql" />
 					<string name="host" />
 					<string name="name" />
