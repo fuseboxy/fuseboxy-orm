@@ -20,13 +20,11 @@ class ORM__Generic implements iORM {
 		<io>
 			<in>
 				<!-- config -->
-				<structure name="$fusebox->config|FUSEBOXY_ORM_DB">
-					<structure name="db">
-						<string name="host" />
-						<string name="name" />
-						<string name="username" />
-						<string name="password" />
-					</structure>
+				<structure name="$fusebox->config[db]|FUSEBOXY_ORM_DB">
+					<string name="host" />
+					<string name="name" />
+					<string name="username" />
+					<string name="password" />
 				</structure>
 				<!-- cache -->
 				<object name="$conn" scope="self" optional="yes" />

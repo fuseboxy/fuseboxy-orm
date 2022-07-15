@@ -21,15 +21,13 @@ class ORM__RedBean implements iORM {
 		<io>
 			<in>
 				<!-- config -->
-				<structure name="$fusebox->config|FUSEBOXY_ORM_DB">
-					<structure name="db">
-						<string name="provider" optional="yes" default="mysql" />
-						<string name="host" />
-						<string name="name" />
-						<string name="username" />
-						<string name="password" />
-						<boolean name="freeze" optional="yes" />
-					</structure>
+				<structure name="$fusebox->config[db]|FUSEBOXY_ORM_DB">
+					<string name="provider" optional="yes" default="mysql" />
+					<string name="host" />
+					<string name="name" />
+					<string name="username" />
+					<string name="password" />
+					<boolean name="freeze" optional="yes" />
 				</structure>
 			</in>
 			<out>
