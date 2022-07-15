@@ -147,12 +147,11 @@ class ORM__RedBean implements iORM {
 	// obtain multiple records according to criteria
 	public static function get($beanType, $filterOrID, $param) {
 		if ( self::init() === false ) return false;
-		// get multiple records, or...
-		if ( !is_numeric($filterOrID) ) return R::find($beanType, $filterOrID, $param);
-		// get specific record
-		$result = R::load($beanType, $filterOrID);
-		if ( empty($result->id) ) {
-			self::$error = "[ORM__RedBean::get] Record not found (id={$filterOrID})";
+		// get specific record or multiple records
+		try {
+			$result = is_numeric($filterOrID) ? R::load($beanType, $filterOrID) : R::find($beanType, $filterOrID, $param);
+		} catch (Exception $e) {
+			self::$error = '[ORM__RedBean::get] '.$e->getMessage();
 			return false;
 		}
 		// done!

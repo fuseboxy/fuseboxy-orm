@@ -182,10 +182,6 @@ class ORM__Generic implements iORM {
 	public static function getByID($beanType, $id) {
 		$bean = self::first($beanType, 'id = ?', [ $id ]);
 		if ( $bean === false ) return false;
-		if ( empty($bean->id) ) {
-			self::$error = "[ORM__Generic::getByID] Record not found (id={$id})";
-			return false;
-		}
 		return $bean;
 	}
 
