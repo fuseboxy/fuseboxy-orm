@@ -1,6 +1,6 @@
 <?php
 require_once 'iORM.php';
-require_once dirname(dirname(__DIR__)).'/lib/redbeanphp/5.3.1/rb.php';
+require_once dirname(dirname(__DIR__)).'/lib/redbeanphp/5.7.2/rb.php';
 class ORM__RedBean implements iORM {
 
 
