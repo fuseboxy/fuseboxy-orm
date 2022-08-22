@@ -1,10 +1,39 @@
 Fuseboxy ORM
 ============
 
-## Installation
+No More SQL
 
 
 ----------------------------------------------------------------------------------------------------
+
+
+## Installation
+
+#### By Composer
+
+
+#### Manually
+
+
+----------------------------------------------------------------------------------------------------
+
+
+## ORM Library
+
+#### RedBeanPHP
+
+* Third-party library (which has limitation of underscore on table name)
+* https://redbeanphp.com/
+
+
+#### Generic
+
+* Own library (which do not have limitation on table name)
+* Basic CRUD operations only
+
+
+----------------------------------------------------------------------------------------------------
+
 
 ## Examples
 
@@ -71,6 +100,7 @@ F::error(ORM::error(), $deleted === false);
 
 echo 'Record deleted successfully';
 ````
+
 
 ----------------------------------------------------------------------------------------------------
 
