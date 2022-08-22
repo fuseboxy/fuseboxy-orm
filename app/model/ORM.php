@@ -111,7 +111,7 @@ class ORM implements iORM {
 		<io>
 			<in>
 				<string name="$beanType" />
-				<string name="$order" />
+				<string name="$order" default="ORDER BY id" />
 			</in>
 			<out>
 				<structure name="~return~">
