@@ -272,7 +272,9 @@ class ORM implements iORM {
 	/**
 	<fusedoc>
 		<description>
-			create empty new item (preload data when specified)
+			create new object container
+			===> pre-load data when specified
+			===> not save to database yet
 		</description>
 		<io>
 			<in>
