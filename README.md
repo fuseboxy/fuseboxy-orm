@@ -202,9 +202,9 @@ echo 'Record deleted successfully';
 ````
 
 #### ORM::one ( $beanType, $filter="", $param=[] )
-
-* (alias of `ORM::first` method)
-
+````
+// Alias of [ORM::first] method
+````
 
 #### ORM::get ( $beanType, $filterOrID="", $param=[] )
 ````
@@ -283,9 +283,9 @@ echo 'Record deleted successfully';
 ````
 
 #### ORM::run ( $sql, $param=[], $return="all" )
-
-*  Alias of `ORM::query` method
-
+````
+// Alias of [ORM::query] method
+````
 
 #### ORM::save ( $bean )
 ````
