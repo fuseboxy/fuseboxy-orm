@@ -20,7 +20,7 @@ No More SQL
 
 ## ORM Libraries
 
-#### RedBeanPHP
+#### RedBeanPHP (v5.7)
 
 * Third-party library (which has limitation of underscore on table name)
 * https://redbeanphp.com/
