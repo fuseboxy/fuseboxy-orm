@@ -1,7 +1,7 @@
 Fuseboxy ORM
 ============
 
-* Keep your SQL to a minimmum
+Keep your SQL to a minimmum
 
 
 ----------------------------------------------------------------------------------------------------
