@@ -1,7 +1,7 @@
 Fuseboxy ORM
 ============
 
-No More SQL
+* Keep your SQL to a minimmum
 
 
 ----------------------------------------------------------------------------------------------------
@@ -107,7 +107,7 @@ echo 'Record deleted successfully';
 
 ## Methods
 
-#### ORM::all($beanType, $order="ORDER BY id")
+#### ORM::all ( $beanType, $order="ORDER BY id" )
 ````
 <fusedoc>
 	<description>
@@ -127,7 +127,7 @@ echo 'Record deleted successfully';
 </fusedoc>
 ````
 
-#### ORM::columns($beanType)
+#### ORM::columns ( $beanType )
 ````
 <fusedoc>
 	<description>
@@ -146,7 +146,7 @@ echo 'Record deleted successfully';
 </fusedoc>
 ````
 
-#### ORM::count($beanType, $filter="", $param=[])
+#### ORM::count ( $beanType, $filter="", $param=[] )
 ````
 <fusedoc>
 	<description>
@@ -165,7 +165,7 @@ echo 'Record deleted successfully';
 </fusedoc>
 ````
 
-#### ORM::delete($bean)
+#### ORM::delete ( $bean )
 ````
 <fusedoc>
 	<description>
@@ -182,7 +182,7 @@ echo 'Record deleted successfully';
 </fusedoc>
 ````
 
-#### ORM::first($beanType, $filter="", $param=[])
+#### ORM::first ( $beanType, $filter="", $param=[] )
 ````
 <fusedoc>
 	<description>
@@ -201,12 +201,12 @@ echo 'Record deleted successfully';
 </fusedoc>
 ````
 
-#### ORM::one($beanType, $filter="", $param=[])
+#### ORM::one ( $beanType, $filter="", $param=[] )
 
 * (alias of `ORM::first` method)
 
 
-#### ORM::get($beanType, $filterOrID="", $param=[])
+#### ORM::get ( $beanType, $filterOrID="", $param=[] )
 ````
 <fusedoc>
 	<description>
@@ -231,7 +231,7 @@ echo 'Record deleted successfully';
 </fusedoc>
 ````
 
-#### ORM::new($beanType, $data=[])
+#### ORM::new ( $beanType, $data=[] )
 ````
 <fusedoc>
 	<description>
@@ -251,7 +251,7 @@ echo 'Record deleted successfully';
 </fusedoc>
 ````
 
-#### ORM::query($sql, $param=[], $return="all")
+#### ORM::query ( $sql, $param=[], $return="all" )
 ````
 <fusedoc>
 	<description>
@@ -282,12 +282,12 @@ echo 'Record deleted successfully';
 </fusedoc>
 ````
 
-#### ORM::run($sql, $param=[], $return="all")
+#### ORM::run ( $sql, $param=[], $return="all" )
 
 *  Alias of `ORM::query` method
 
 
-#### ORM::save($bean)
+#### ORM::save ( $bean )
 ````
 <fusedoc>
 	<description>
@@ -307,7 +307,7 @@ echo 'Record deleted successfully';
 </fusedoc>
 ````
 
-#### ORM::tables()
+#### ORM::tables ( )
 ````
 <fusedoc>
 	<description>
@@ -327,7 +327,7 @@ echo 'Record deleted successfully';
 </fusedoc>
 ````
 
-#### Bean::diff($bean1, $bean2)
+#### Bean::diff ( $bean1, $bean2 )
 ````
 <fusedoc>
 	<description>
@@ -345,7 +345,7 @@ echo 'Record deleted successfully';
 </fusedoc>
 ````
 
-#### Bean::export($bean)
+#### Bean::export ( $bean )
 ````
 <fusedoc>
 	<description>
@@ -362,7 +362,7 @@ echo 'Record deleted successfully';
 </fusedoc>
 ````
 
-#### Bean::getColumns($bean)
+#### Bean::getColumns ( $bean )
 ````
 <fusedoc>
 	<description>
@@ -381,7 +381,7 @@ echo 'Record deleted successfully';
 </fusedoc>
 ````
 
-#### Bean::groupBy($groupColumn, $beans)
+#### Bean::groupBy ( $groupColumn, $beans )
 ````
 <fusedoc>
 	<description>
@@ -405,7 +405,7 @@ echo 'Record deleted successfully';
 </fusedoc>
 ````
 
-#### Bean::toString($bean)
+#### Bean::toString ( $bean )
 ````
 <fusedoc>
 	<description>
@@ -422,7 +422,7 @@ echo 'Record deleted successfully';
 </fusedoc>
 ````
 
-#### Bean::type($bean)
+#### Bean::type ( $bean )
 ````
 <fusedoc>
 	<description>
