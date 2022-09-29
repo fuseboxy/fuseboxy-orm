@@ -20,7 +20,7 @@ class ORM__Generic implements iORM {
 		<io>
 			<in>
 				<!-- config -->
-				<structure name="$fusebox->config['db']|FUSEBOXY_ORM_DB">
+				<structure name="$fusebox->config['db']|FUSEBOXY_ORM|FUSEBOXY_ORM_DB">
 					<string name="host" />
 					<string name="name" />
 					<string name="username" />
@@ -43,6 +43,7 @@ class ORM__Generic implements iORM {
 		if ( self::$conn ) return true;
 		// load config (from framework or constant)
 		if ( class_exists('F') ) $dbConfig = F::config('db');
+		elseif ( defined('FUSEBOXY_ORM') ) $dbConfig = FUSEBOXY_ORM;
 		elseif ( defined('FUSEBOXY_ORM_DB') ) $dbConfig = FUSEBOXY_ORM_DB;
 		// check config
 		if ( empty($dbConfig) ) {
