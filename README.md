@@ -37,7 +37,7 @@ Keep your SQL to a minimum
 
 ## Examples
 
-#### Load and multiple records
+#### Load multiple records
 ````
 <?php
 $data = ORM::get('foo', 'disabled = 0 AND category = ? ORDER BY datetime DESC', array('bar'));
