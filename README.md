@@ -11,8 +11,84 @@ Keep your SQL to a minimum
 
 #### By Composer
 
+* Specify followings in `composer.json` and run `composer u`
+```
+{
+    "require": {
+        "fuseboxy/fuseboxy-orm" : "*"
+    },
+    "repositories": [
+        { "type": "git", "url": "https://www.bitbucket.org/henrygotmojo/fuseboxy-installer" },
+        { "type": "git", "url": "https://www.bitbucket.org/henrygotmojo/fuseboxy-orm" }
+    ],
+    "minimum-stability": "dev",
+    "prefer-stable": false,
+    "config": {
+        "platform": { "php": "7.4" },
+        "allow-plugins": { "fuseboxy/fuseboxy-installer": true }
+    },
+}
+```
+* Include `vendor/autoload.php` which generate by Composer
+
 
 #### Manually
+
+* Extract package to (e.g.) `fuseboxy-orm` directory
+```
++ my_application
+  + fuseboxy-orm
+    + app/*
+    + lib/*
+```
+* Include ORM component
+```
+<?php
+require_once 'fuseboxy-orm/app/model/ORM.php';
+define('FUSEBOXY_ORM_DB', [ ... ]);
+...
+
+```
+
+----------------------------------------------------------------------------------------------------
+
+
+## Configuration
+
+#### Fuseboxy Framework
+Specify `db` of framework config at `app/config/fusebox_config.php`
+
+##### Example
+```
+<?php
+return array(
+	...
+
+	'db' => array(
+		'host'     => 'localhost',
+		'name'     => 'my_database',
+		'username' => 'root',
+		'password' => 'password',
+	),
+
+	...
+);
+```
+
+
+#### Others
+Define `FUSEBOXY_ORM_DB` constant
+
+##### Example
+```
+<?php
+define('FUSEBOXY_ORM', [
+	'host'     => 'localhost',
+	'name'     => 'my_database',
+	'username' => 'root',
+	'password' => 'password',
+]);
+```
 
 
 ----------------------------------------------------------------------------------------------------
@@ -38,38 +114,25 @@ Keep your SQL to a minimum
 ## Examples
 
 #### Load multiple records
-````
+```
 <?php
 $data = ORM::get('foo', 'disabled = 0 AND category = ? ORDER BY datetime DESC', array('bar'));
 F::error(ORM::error(), $data === false);
 foreach ( $data as $id => $item ) var_dump($item);
-````
+```
 
 #### Load specific record
-````
+```
 <?php
 $bean = ORM::get('foo', $_GET['id']);
 F::error(ORM::error(), $bean === false);
 var_dump($bean);
-````
+```
 
-#### Create new record
-````
-<?php
-// create new object and then save
-$bean_1 = ORM::new('foo', [ 'category' => 'aaaaa', 'seq' => 10 ]);
-$id = ORM::save($bean_1);
-F::error(ORM::error(), $id === false);
-var_dump($id);
 
-// save new record right away
-$bean_2 = ORM::saveNew('foo', [ 'category' => 'bbbbb', 'seq' => 999 ]);
-F::error(ORM::error(), $bean_2 === false);
-var_dump($bean_2);
-````
 
 #### Update specific record
-````
+```
 <?php
 $bean = ORM::get('foo', $_GET['id']);
 F::error(ORM::error(), $bean === false);
@@ -79,18 +142,18 @@ $saved = ORM::save($bean);
 F::error(ORM::error(), $saved === false);
 
 echo 'Record updated successfully';
-````
+```
 
 #### Update multiple records
-````
+```
 <?php
 $updated = ORM::query('UPDATE foo SET category = ? WHERE category IS NULL ', array('bar'));
 F::error(ORM::error(), $updated === false);
 echo 'Records updated successfully';
-````
+```
 
 #### Delete specific record
-````
+```
 <?php
 $bean = ORM::get('foo', $_GET['id']);
 F::error(ORM::error(), $bean === false);
@@ -99,7 +162,7 @@ $deleted = ORM::delete($bean);
 F::error(ORM::error(), $deleted === false);
 
 echo 'Record deleted successfully';
-````
+```
 
 
 ----------------------------------------------------------------------------------------------------
@@ -108,7 +171,9 @@ echo 'Record deleted successfully';
 ## Methods
 
 #### ORM::all ( $beanType, $order="ORDER BY id" )
-````
+
+##### Parameters
+```
 <fusedoc>
 	<description>
 		get all records (default sort by id)
@@ -125,10 +190,17 @@ echo 'Record deleted successfully';
 		</out>
 	</io>
 </fusedoc>
-````
+```
+
+##### Example
+```
+```
+
 
 #### ORM::columns ( $beanType )
-````
+
+##### Parameters
+```
 <fusedoc>
 	<description>
 		get columns of specific table
@@ -144,10 +216,17 @@ echo 'Record deleted successfully';
 		</out>
 	</io>
 </fusedoc>
-````
+```
+
+##### Example
+```
+```
+
 
 #### ORM::count ( $beanType, $filter="", $param=[] )
-````
+
+##### Parameters
+```
 <fusedoc>
 	<description>
 		count number of records accorrding to criteria (if any)
@@ -163,10 +242,17 @@ echo 'Record deleted successfully';
 		</out>
 	</io>
 </fusedoc>
-````
+```
+
+##### Example
+```
+```
+
 
 #### ORM::delete ( $bean )
-````
+
+##### Parameters
+```
 <fusedoc>
 	<description>
 		delete specific record
@@ -180,10 +266,17 @@ echo 'Record deleted successfully';
 		</out>
 	</io>
 </fusedoc>
-````
+```
+
+##### Example
+```
+```
+
 
 #### ORM::first ( $beanType, $filter="", $param=[] )
-````
+
+##### Parameters
+```
 <fusedoc>
 	<description>
 		obtain first record according to the criteria
@@ -199,15 +292,21 @@ echo 'Record deleted successfully';
 		</out>
 	</io>
 </fusedoc>
-````
+```
+
+##### Example
+```
+```
+
 
 #### ORM::one ( $beanType, $filter="", $param=[] )
-````
-Alias of [ORM::first] method
-````
+Alias of `ORM::first` method
+
 
 #### ORM::get ( $beanType, $filterOrID="", $param=[] )
-````
+
+##### Parameters
+```
 <fusedoc>
 	<description>
 		obtain specific record according to ID, or...
@@ -229,10 +328,17 @@ Alias of [ORM::first] method
 		</out>
 	</io>
 </fusedoc>
-````
+```
+
+##### Example
+```
+```
+
 
 #### ORM::new ( $beanType, $data=[] )
-````
+
+##### Parameters
+```
 <fusedoc>
 	<description>
 		create empty new item (preload data when specified)
@@ -249,10 +355,17 @@ Alias of [ORM::first] method
 		</out>
 	</io>
 </fusedoc>
-````
+```
+
+##### Example
+```
+```
+
 
 #### ORM::query ( $sql, $param=[], $return="all" )
-````
+
+##### Parameters
+```
 <fusedoc>
 	<description>
 		run sql statement
@@ -280,15 +393,21 @@ Alias of [ORM::first] method
 		</out>
 	</io>
 </fusedoc>
-````
+```
+
+##### Example
+```
+```
+
 
 #### ORM::run ( $sql, $param=[], $return="all" )
-````
-Alias of [ORM::query] method
-````
+Alias of `ORM::query` method
+
 
 #### ORM::save ( $bean )
-````
+
+##### Parameters
+```
 <fusedoc>
 	<description>
 		save object into database
@@ -305,10 +424,39 @@ Alias of [ORM::query] method
 		</out>
 	</io>
 </fusedoc>
-````
+```
+
+##### Example
+```
+```
+
+
+#### ORM::saveNew ( $beanType, $data )
+
+##### Parameters
+```
+```
+
+##### Example
+```
+<?php
+// create new object and then save
+$bean_1 = ORM::new('foo', [ 'category' => 'aaaaa', 'seq' => 10 ]);
+$id = ORM::save($bean_1);
+F::error(ORM::error(), $id === false);
+var_dump($id);
+
+// save new record right away
+$bean_2 = ORM::saveNew('foo', [ 'category' => 'bbbbb', 'seq' => 999 ]);
+F::error(ORM::error(), $bean_2 === false);
+var_dump($bean_2);
+```
+
 
 #### ORM::tables ( )
-````
+
+##### Parameters
+```
 <fusedoc>
 	<description>
 		create empty new item & save
@@ -325,10 +473,17 @@ Alias of [ORM::query] method
 		</out>
 	</io>
 </fusedoc>
-````
+```
+
+##### Example
+```
+```
+
 
 #### Bean::diff ( $bean1, $bean2 )
-````
+
+##### Parameters
+```
 <fusedoc>
 	<description>
 		compare two objects and return string showing the differences
@@ -343,10 +498,17 @@ Alias of [ORM::query] method
 		</out>
 	</io>
 </fusedoc>
-````
+```
+
+##### Example
+```
+```
+
 
 #### Bean::export ( $bean )
-````
+
+##### Parameters
+```
 <fusedoc>
 	<description>
 		export bean from object to associative-array
@@ -360,10 +522,17 @@ Alias of [ORM::query] method
 		</out>
 	</io>
 </fusedoc>
-````
+```
+
+##### Example
+```
+```
+
 
 #### Bean::getColumns ( $bean )
-````
+
+##### Parameters
+```
 <fusedoc>
 	<description>
 		get columns of bean
@@ -379,10 +548,17 @@ Alias of [ORM::query] method
 		</out>
 	</io>
 </fusedoc>
-````
+```
+
+##### Example
+```
+```
+
 
 #### Bean::groupBy ( $groupColumn, $beans )
-````
+
+##### Parameters
+```
 <fusedoc>
 	<description>
 		transform records into multi-level array
@@ -403,10 +579,17 @@ Alias of [ORM::query] method
 		</out>
 	</io>
 </fusedoc>
-````
+```
+
+##### Example
+```
+```
+
 
 #### Bean::toString ( $bean )
-````
+
+##### Parameters
+```
 <fusedoc>
 	<description>
 		convert bean to string
@@ -420,10 +603,17 @@ Alias of [ORM::query] method
 		</out>
 	</io>
 </fusedoc>
-````
+```
+
+##### Example
+```
+```
+
 
 #### Bean::type ( $bean )
-````
+
+##### Parameters
+```
 <fusedoc>
 	<description>
 		obtain type of bean
@@ -440,4 +630,8 @@ Alias of [ORM::query] method
 		</out>
 	</io>
 </fusedoc>
-````
+```
+
+##### Example
+```
+```
