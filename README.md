@@ -1,4 +1,4 @@
-Fuseboxy ORM
+FUSEBOXY ORM
 ============
 
 Keep your SQL to a minimum
@@ -40,7 +40,7 @@ define('FUSEBOXY_ORM_DB', [ ... ]);
 ```
 
 
-#### Do It Manually
+#### Install It Manually
 
 * Extract package to whatever directory (e.g. `fuseboxy-orm`)
 ```
@@ -64,7 +64,7 @@ define('FUSEBOXY_ORM_DB', [ ... ]);
 
 ## Configuration
 
-#### Fuseboxy Framework
+#### For Fuseboxy Framework
 Specify framework config `db` at `app/config/fusebox_config.php`
 
 ```
@@ -84,7 +84,7 @@ return array(
 ```
 
 
-#### Others
+#### For Others
 Define `FUSEBOXY_ORM_DB` constant
 
 ```
@@ -103,7 +103,7 @@ define('FUSEBOXY_ORM_DB', [
 
 ## ORM Libraries
 
-#### RedBeanPHP (v5.7.x)
+#### RedBeanPHP (5.7.x)
 
 * Third-party library (which has limitation of underscore on table name)
 * https://redbeanphp.com/
@@ -364,10 +364,6 @@ var_dump($firstBean);
 ```
 
 
-#### ORM::one ( $beanType, $filter="", $param=[] )
-Alias of `ORM::first` method
-
-
 #### ORM::get ( $beanType, $filterOrID="", $param=[] )
 Obtain single specific record by ID; or
 Obtain multiple records according to criteria specified (if any)
@@ -409,6 +405,43 @@ foreach ( $data as $id => $bean ) var_dump($bean);
 ```
 
 
+#### ORM::init ( $vendor )
+Detemrine the ORM library to use (at the very start)
+Default using RedBeanPHP
+
+##### Parameters
+```
+<fusedoc>
+	<description>
+		setup ORM of corresponding vendor
+	</description>
+	<io>
+		<in>
+			<string name="$option" />
+		</in>
+		<out>
+			<boolean name="~return~" />
+		</out>
+	</io>
+</fusedoc>
+```
+
+##### Example
+```
+<?php
+// using generic ORM library
+$ready = ORM::init('generic');
+if ( $ready === false ) die(ORM::error());
+
+// load single record
+$bean = ORM::first('foo');
+if ( $bean === false ) die(ORM::error());
+
+// see the difference of data structure
+var_dump($bean);
+```
+
+
 #### ORM::new ( $beanType, $data=[] )
 Create new object for specific table (but not save to database yet)
 
@@ -447,6 +480,10 @@ var_dump($bean->id);
 ```
 
 
+#### ORM::one ( $beanType, $filter="", $param=[] )
+Alias of `ORM::first` method
+
+
 #### ORM::query ( $sql, $param=[], $return="all" )
 Run SQL statement
 
@@ -481,7 +518,7 @@ Run SQL statement
 ##### Example
 ```
 <?php
-// run complicated statement
+// prepare complicated statement
 $sql = '
 	SELECT DISTINCT c.name
 	FROM product p

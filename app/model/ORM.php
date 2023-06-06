@@ -75,6 +75,7 @@ class ORM implements iORM {
 					<string name="vendor" optional="yes" />
 					<string name="class_alias" optional="yes" default="O" />
 				</structure>
+			</in>
 			<out>
 				<boolean name="~return~" />
 			</out>
