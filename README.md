@@ -42,7 +42,7 @@ define('FUSEBOXY_ORM_DB', [ ... ]);
 
 #### Do It Manually
 
-* Extract package to (e.g.) `fuseboxy-orm` directory
+* Extract package to whatever directory (e.g. `fuseboxy-orm`)
 ```
 + my_application
   + fuseboxy-orm
@@ -65,7 +65,7 @@ define('FUSEBOXY_ORM_DB', [ ... ]);
 ## Configuration
 
 #### Fuseboxy Framework
-Specify `db` of framework config at `app/config/fusebox_config.php`
+Specify framework config `db` at `app/config/fusebox_config.php`
 
 ```
 <?php
@@ -89,7 +89,7 @@ Define `FUSEBOXY_ORM_DB` constant
 
 ```
 <?php
-define('FUSEBOXY_ORM', [
+define('FUSEBOXY_ORM_DB', [
 	'host'     => 'localhost',
 	'name'     => 'my_database',
 	'username' => 'root',
@@ -227,17 +227,12 @@ Get all records of a table (default sort by id)
 ##### Example
 ```
 <?php
-// load library
-require_once '/path/to/ORM.php';
-define('FUESBOXY_ORM_DB', [ ... ]);
-
-// get data
+// load data
 $beans = ORM::all('foo', 'ORDER BY datetime DESC');
 if ( $beans === false ) die(ORM::error());
 
 // display result
 foreach ( $beans as $id => $item ) var_dump($item);
-
 ```
 
 
@@ -267,22 +262,17 @@ Get columns of specific table
 ##### Example
 ```
 <?php
-// load library
-require_once '/path/to/ORM.php';
-define('FUESBOXY_ORM_DB', [ ... ]);
-
-// get data
-$beans = ORM::all('foo', 'ORDER BY datetime DESC');
-if ( $beans === false ) die(ORM::error());
+// load schema
+$columns = ORM::columns('foo');
+if ( $columns === false ) die(ORM::error());
 
 // display result
-foreach ( $beans as $id => $item ) var_dump($item);
-
+var_dump($columns);
 ```
 
 
 #### ORM::count ( $beanType, $filter="", $param=[] )
-Count number of records according to specified criteria (if any)
+Count number of records according to criteria specified (if any)
 
 ##### Parameters
 ```
@@ -302,17 +292,22 @@ Count number of records according to specified criteria (if any)
 
 ##### Example
 ```
+<?php
+// get number of records
+$count = ORM::count('foo', 'disabled = 0 AND category = ?', array('bar'));
+if ( $count === false ) die(ORM::error());
+
+// display result
+var_dump($count);
 ```
 
 
 #### ORM::delete ( $bean )
+Delete single specific record
 
 ##### Parameters
 ```
 <fusedoc>
-	<description>
-		delete specific record
-	</description>
 	<io>
 		<in>
 			<object name="$bean" />
@@ -326,17 +321,24 @@ Count number of records according to specified criteria (if any)
 
 ##### Example
 ```
+<?php
+// load specific record
+$bean = ORM::get('foo', $_GET['id']);
+if ( $bean === false ) die(ORM::error());
+
+// delete record
+$deleted = ORM::delete($bean);
+if ( $deleted === false ) die(ORM::error());
+var_dump($deleted);
 ```
 
 
 #### ORM::first ( $beanType, $filter="", $param=[] )
+Obtain first record according to the criteria specified (if any)
 
 ##### Parameters
 ```
 <fusedoc>
-	<description>
-		obtain first record according to the criteria
-	</description>
 	<io>
 		<in>
 			<string name="$beanType" />
@@ -352,6 +354,13 @@ Count number of records according to specified criteria (if any)
 
 ##### Example
 ```
+<?php
+// load data
+$firstBean = ORM::get('foo', 'disabled = 0 AND category = ? ORDER BY created_on DESC', array('bar'));
+if ( $firstBean === false ) die(ORM::error());
+
+// display result
+var_dump($firstBean);
 ```
 
 
@@ -360,14 +369,13 @@ Alias of `ORM::first` method
 
 
 #### ORM::get ( $beanType, $filterOrID="", $param=[] )
+Obtain single specific record by ID; or
+Obtain multiple records according to criteria specified (if any)
+
 
 ##### Parameters
 ```
 <fusedoc>
-	<description>
-		obtain specific record according to ID, or...
-		obtain multiple records according to criteria
-	</description>
 	<io>
 		<in>
 			<string name="$beanType" />
@@ -388,17 +396,25 @@ Alias of `ORM::first` method
 
 ##### Example
 ```
+<?php
+// load single record
+$bean = ORM::get('foo', $_GET['id']);
+if ( $bean === false ) die(ORM::error());
+var_dump($bean);
+
+// load multiple records
+$data = ORM::get('foo', 'disabled = 0 ORDER BY created_on DESC');
+if ( $data === false ) die(ORM::error());
+foreach ( $data as $id => $bean ) var_dump($bean);
 ```
 
 
 #### ORM::new ( $beanType, $data=[] )
+Create new object for specific table (but not save to database yet)
 
 ##### Parameters
 ```
 <fusedoc>
-	<description>
-		create empty new item (preload data when specified)
-	</description>
 	<io>
 		<in>
 			<string name="$beanType" />
@@ -415,17 +431,28 @@ Alias of `ORM::first` method
 
 ##### Example
 ```
+<?php
+// create container with data pre-loaded
+$bean = ORM::new('student', [
+	'name' => 'FOO, BAR',
+	'gender' => 'M',
+	'hkid' => 'A1234567',
+	'dob' => '1999-12-31',
+]);
+if ( $bean === false ) die(ORM::error());
+
+// display result (ID should be empty)
+var_dump($bean);
+var_dump($bean->id);
 ```
 
 
 #### ORM::query ( $sql, $param=[], $return="all" )
+Run SQL statement
 
 ##### Parameters
 ```
 <fusedoc>
-	<description>
-		run sql statement
-	</description>
 	<io>
 		<in>
 			<string name="$sql" />
@@ -453,6 +480,22 @@ Alias of `ORM::first` method
 
 ##### Example
 ```
+<?php
+// run complicated statement
+$sql = '
+	SELECT DISTINCT c.name
+	FROM product p
+	INNER JOIN category c ON (p.category_id = c.id)
+	WHERE p.price > ?
+';
+$param = array(9999);
+
+// run statement (and obtain single column of data only)
+$categories = ORM::query($sql, $param, 'column');
+if ( $categories === false ) die(ORM::error());
+
+// display result
+var_dump($categories);
 ```
 
 
@@ -461,18 +504,13 @@ Alias of `ORM::query` method
 
 
 #### ORM::save ( $bean )
+Save object into database
 
 ##### Parameters
 ```
 <fusedoc>
-	<description>
-		save object into database
-	</description>
 	<io>
 		<in>
-			<!-- property -->
-			<boolean name="$saveEmptyStringAsNull" scope="self" />
-			<!-- parameter -->
 			<object name="$bean" />
 		</in>
 		<out>
@@ -484,13 +522,38 @@ Alias of `ORM::query` method
 
 ##### Example
 ```
+<?php
+// update existing record
+$bean = ORM::first('foo');
+if ( $bean === false ) die(ORM::error());
+$bean->category = 'XXXXX';
+$id = ORM::save($bean);
+if ( $id === false ) die(ORM::error());
+
+// create new record
+$newBean = ORM::new('foo');
+if ( $newBean === false ) die(ORM::error());
+$newBean->category = 'BAR';
+$newID = ORM::save($newBean);
+if ( $newID === false ) die(ORM::error());
 ```
 
 
 #### ORM::saveNew ( $beanType, $data )
+Create new object and save to database in one-go
 
 ##### Parameters
 ```
+<?php
+// insert new record to database
+$bean = ORM::saveNew('foo', [
+	'category' => 'BAR',
+	'disabled' = 0,
+]);
+if ( $bean === false ) die(ORM::error());
+
+// display result
+var_dump($bean);
 ```
 
 ##### Example
@@ -500,22 +563,17 @@ Alias of `ORM::query` method
 
 
 #### ORM::tables ( )
+Obtain name of all tables in the database
 
 ##### Parameters
 ```
 <fusedoc>
-	<description>
-		create empty new item & save
-	</description>
 	<io>
-		<in>
-			<string name="$beanType" />
-			<structure name="$data" optional="yes">
-				<mixed name="~columnName~" />
-			</structure>
-		</in>
+		<in />
 		<out>
-			<object name="~return~" comments="last insert record" />
+			<array name="~return~">
+				<string name="+" />
+			</array>
 		</out>
 	</io>
 </fusedoc>
@@ -523,17 +581,22 @@ Alias of `ORM::query` method
 
 ##### Example
 ```
+<?php
+// load data
+$tables = ORM::tables();
+if ( $tables === false ) die(ORM::error());
+
+// display result
+var_dump($tables);
 ```
 
 
 #### Bean::diff ( $bean1, $bean2 )
+Compare two objects and return string which showing the difference
 
 ##### Parameters
 ```
 <fusedoc>
-	<description>
-		compare two objects and return string showing the differences
-	</description>
 	<io>
 		<in>
 			<object name="$bean1" />
@@ -548,17 +611,33 @@ Alias of `ORM::query` method
 
 ##### Example
 ```
+<?php
+// load record
+$bean = ORM::get('foo', $_GET['id']);
+if ( $bean === false ) die(ORM::error());
+
+// clone object (to avoid pass-by-reference)
+$beanBeforeSave = unserialize(serialize($bean));
+
+// update record
+$bean->name = 'FOO BAR';
+$bean->category = 'BAR';
+$updated = ORM::save($bean);
+if ( $updated === false ) die(ORM::error());
+
+// display diff
+$diff = Bean::diff($beanBeforeSave, $bean);
+if ( $diff === false ) die(Bean::error());
+var_dump($diff);
 ```
 
 
 #### Bean::export ( $bean )
+Export bean from object to associative-array
 
 ##### Parameters
 ```
 <fusedoc>
-	<description>
-		export bean from object to associative-array
-	</description>
 	<io>
 		<in>
 			<object name="$bean" />
@@ -572,17 +651,25 @@ Alias of `ORM::query` method
 
 ##### Example
 ```
+<?php
+// load record
+$bean = ORM::first('foo');
+if ( $bean === false ) die(ORM::error());
+
+// display record as array
+var_dump($bean->export());
+
+// display record as object
+var_dump($bean);
 ```
 
 
 #### Bean::getColumns ( $bean )
+Obtain columns of specific bean
 
 ##### Parameters
 ```
 <fusedoc>
-	<description>
-		get columns of bean
-	</description>
 	<io>
 		<in>
 			<object name="$bean" />
@@ -598,17 +685,26 @@ Alias of `ORM::query` method
 
 ##### Example
 ```
+<?php
+// load specific record
+$bean = ORM::get('foo', $_GET['id']);
+if ( $bean === false ) die(ORM::error());
+
+// obtain columns of this bean
+$beanColumns = Bean::getColumns($bean);
+if ( $beanColumns === false ) die(Bean::error());
+
+// display result
+var_dump($beanColumns);
 ```
 
 
 #### Bean::groupBy ( $groupColumn, $beans )
+Convert array-of-beans into multi-dimensional-array which groups beans by column specified
 
 ##### Parameters
 ```
 <fusedoc>
-	<description>
-		transform records into multi-level array
-	</description>
 	<io>
 		<in>
 			<string name="$groupColumn" />
@@ -629,17 +725,25 @@ Alias of `ORM::query` method
 
 ##### Example
 ```
+<?php
+// load data
+$data = ORM::all('foo');
+if ( $data === false ) die(ORM::error());
+var_dump($data);
+
+// group records by category
+$dataGroupByCategory = Bean::groupBy('category', $data);
+if ( $dataGroupByCategory === false ) die(Bean::error());
+var_dump($dataGroupByCategory);
 ```
 
 
 #### Bean::toString ( $bean )
+Convert data of bean to human-readable string
 
 ##### Parameters
 ```
 <fusedoc>
-	<description>
-		convert bean to string
-	</description>
 	<io>
 		<in>
 			<object name="$bean" />
@@ -653,23 +757,30 @@ Alias of `ORM::query` method
 
 ##### Example
 ```
+<?php
+// load record
+$bean = ORM::first('foo');
+if ( $bean === false ) die(ORM::error());
+
+// convert bean to string (for log writing)
+$beanString = Bean::toString($bean);
+if ( $beanString === false ) die(Bean::error());
+
+// write log
+$logResult = Log::write([ 'action' => 'FOOBAR', 'remark' => $beanString ]);
+if ( $logResult === false ) die(Log::error());
 ```
 
 
 #### Bean::type ( $bean )
+Determine bean type (which is table name)
 
 ##### Parameters
 ```
 <fusedoc>
-	<description>
-		obtain type of bean
-	</description>
 	<io>
 		<in>
-			<object name="$bean">
-				<string name="getMeta('type')" optional="yes" oncondition="redbean" />
-				<string name="__type__" optional="yes" oncondition="generic" />
-			</object>
+			<object name="$bean" />
 		</in>
 		<out>
 			<string name="~return~" />
@@ -680,4 +791,15 @@ Alias of `ORM::query` method
 
 ##### Example
 ```
+<?php
+// load record
+$bean = ORM::get('foo', $_GET['id']);
+if ( $bean === false ) die(ORM::error());
+
+// get table name
+$beanType = Bean::type($bean);
+if ( $beanType === false ) die(Bean::error());
+
+// display result
+var_dump($beanType);
 ```
