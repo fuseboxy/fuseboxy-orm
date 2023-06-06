@@ -412,12 +412,9 @@ Default using RedBeanPHP
 ##### Parameters
 ```
 <fusedoc>
-	<description>
-		setup ORM of corresponding vendor
-	</description>
 	<io>
 		<in>
-			<string name="$option" />
+			<string name="$vendor" />
 		</in>
 		<out>
 			<boolean name="~return~" />
