@@ -130,12 +130,14 @@ define('FUSEBOXY_ORM_DB', [ ... ]);
 // load multiple records
 $beans = ORM::get('foo', 'disabled = 0 AND category = ? ORDER BY datetime DESC', array('bar'));
 if ( $beans === false ) die(ORM::error());
-foreach ( $beans as $id => $item ) var_dump($item);
+foreach ( $beans as $id => $item ) :
+	?><div><?php echo $item->name; ?> (id=<?php echo $id; ?>)</div><?php
+endforeach;
 
 // load single specific record
 $bean = ORM::get('foo', $_GET['id']);
 if ( $bean === false ) die(ORM::error());
-var_dump($bean);
+?><div><?php echo $bean->name; ?> (id=<?php echo $bean->id; ?>)</div>
 ```
 
 #### INSERT
