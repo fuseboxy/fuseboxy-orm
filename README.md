@@ -125,16 +125,16 @@ define('FUSEBOXY_ORM_DB', [
 <?php
 // load library
 require_once '/path/to/ORM.php';
-define('FUESBOXY_ORM_DB', [ ... ]);
+define('FUSEBOXY_ORM_DB', [ ... ]);
 
 // load multiple records
 $beans = ORM::get('foo', 'disabled = 0 AND category = ? ORDER BY datetime DESC', array('bar'));
-F::error(ORM::error(), $beans === false);
+if ( $beans === false ) die(ORM::error());
 foreach ( $beans as $id => $item ) var_dump($item);
 
 // load single specific record
 $bean = ORM::get('foo', $_GET['id']);
-F::error(ORM::error(), $bean === false);
+if ( $bean === false ) die(ORM::error());
 var_dump($bean);
 ```
 
@@ -143,17 +143,17 @@ var_dump($bean);
 <?php
 // load library
 require_once '/path/to/ORM.php';
-define('FUESBOXY_ORM_DB', [ ... ]);
+define('FUSEBOXY_ORM_DB', [ ... ]);
 
 // create new object and then save
 $bean1 = ORM::new('foo', [ 'category' => 'aaaaa', 'seq' => 10 ]);
 $id = ORM::save($bean1);
-F::error(ORM::error(), $id === false);
+if ( $id === false ) die(ORM::error());
 var_dump($id);
 
 // save new record right away
 $bean2 = ORM::saveNew('foo', [ 'category' => 'bbbbb', 'seq' => 999 ]);
-F::error(ORM::error(), $bean2 === false);
+if ( $bean2 === false ) die(ORM::error());
 var_dump($bean2);
 ```
 
@@ -162,19 +162,19 @@ var_dump($bean2);
 <?php
 // load library
 require_once '/path/to/ORM.php';
-define('FUESBOXY_ORM_DB', [ ... ]);
+define('FUSEBOXY_ORM_DB', [ ... ]);
 
 // update single specific record
 $bean = ORM::get('foo', $_GET['id']);
-F::error(ORM::error(), $bean === false);
+if ( $bean === false ) die(ORM::error());
 $bean->category = 'bar';
 $updated = ORM::save($bean);
-F::error(ORM::error(), $updated === false);
+if ( $updated === false ) die(ORM::error());
 echo 'Record updated successfully';
 
 // update multiple records by criteria
 $updated = ORM::query('UPDATE foo SET category = ? WHERE category IS NULL ', array('bar'));
-F::error(ORM::error(), $updated === false);
+if ( $updated === false ) die(ORM::error());
 echo 'Records updated successfully';
 ```
 
@@ -183,18 +183,18 @@ echo 'Records updated successfully';
 <?php
 // load library
 require_once '/path/to/ORM.php';
-define('FUESBOXY_ORM_DB', [ ... ]);
+define('FUSEBOXY_ORM_DB', [ ... ]);
 
 // delete single specific record
 $bean = ORM::get('foo', $_GET['id']);
-F::error(ORM::error(), $bean === false);
+if ( $bean === false ) die(ORM::error());
 $deleted = ORM::delete($bean);
-F::error(ORM::error(), $deleted === false);
+if ( $deleted === false ) die(ORM::error());
 echo 'Record deleted successfully';
 
 // delete multiple records by criteria
 $deleted = ORM::query('DELETE foo WHERE disabled = ? ', array(0));
-F::error(ORM::error(), $deleted === false);
+if ( $deleted === false ) die(ORM::error());
 echo 'Records deleted successfully';
 ```
 
