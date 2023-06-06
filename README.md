@@ -18,8 +18,8 @@ Keep your SQL to a minimum
         "fuseboxy/fuseboxy-orm" : "*"
     },
     "repositories": [
-        { "type": "git", "url": "https://www.bitbucket.org/henrygotmojo/fuseboxy-installer" },
-        { "type": "git", "url": "https://www.bitbucket.org/henrygotmojo/fuseboxy-orm" }
+        { "type": "git", "url": "https://www.bitbucket.org/fuseboxy/fuseboxy-installer" },
+        { "type": "git", "url": "https://www.bitbucket.org/fuseboxy/fuseboxy-orm" }
     ],
     "minimum-stability": "dev",
     "prefer-stable": false,
