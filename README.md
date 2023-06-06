@@ -118,57 +118,84 @@ define('FUSEBOXY_ORM', [
 ----------------------------------------------------------------------------------------------------
 
 
-## Examples
+## Quick Start
 
-#### Load multiple records
+#### SELECT
 ```
 <?php
-$data = ORM::get('foo', 'disabled = 0 AND category = ? ORDER BY datetime DESC', array('bar'));
-F::error(ORM::error(), $data === false);
-foreach ( $data as $id => $item ) var_dump($item);
-```
+// load library
+require_once '/path/to/ORM.php';
+define('FUESBOXY_ORM_DB', [ ... ]);
 
-#### Load specific record
-```
-<?php
+// load multiple records
+$beans = ORM::get('foo', 'disabled = 0 AND category = ? ORDER BY datetime DESC', array('bar'));
+F::error(ORM::error(), $beans === false);
+foreach ( $beans as $id => $item ) var_dump($item);
+
+// load single specific record
 $bean = ORM::get('foo', $_GET['id']);
 F::error(ORM::error(), $bean === false);
 var_dump($bean);
 ```
 
-
-
-#### Update specific record
+#### INSERT
 ```
 <?php
+// load library
+require_once '/path/to/ORM.php';
+define('FUESBOXY_ORM_DB', [ ... ]);
+
+// create new object and then save
+$bean1 = ORM::new('foo', [ 'category' => 'aaaaa', 'seq' => 10 ]);
+$id = ORM::save($bean1);
+F::error(ORM::error(), $id === false);
+var_dump($id);
+
+// save new record right away
+$bean2 = ORM::saveNew('foo', [ 'category' => 'bbbbb', 'seq' => 999 ]);
+F::error(ORM::error(), $bean2 === false);
+var_dump($bean2);
+```
+
+#### UPDATE
+```
+<?php
+// load library
+require_once '/path/to/ORM.php';
+define('FUESBOXY_ORM_DB', [ ... ]);
+
+// update single specific record
 $bean = ORM::get('foo', $_GET['id']);
 F::error(ORM::error(), $bean === false);
-
 $bean->category = 'bar';
-$saved = ORM::save($bean);
-F::error(ORM::error(), $saved === false);
-
+$updated = ORM::save($bean);
+F::error(ORM::error(), $updated === false);
 echo 'Record updated successfully';
-```
 
-#### Update multiple records
-```
-<?php
+// update multiple records by criteria
 $updated = ORM::query('UPDATE foo SET category = ? WHERE category IS NULL ', array('bar'));
 F::error(ORM::error(), $updated === false);
 echo 'Records updated successfully';
 ```
 
-#### Delete specific record
+#### DELETE
 ```
 <?php
+// load library
+require_once '/path/to/ORM.php';
+define('FUESBOXY_ORM_DB', [ ... ]);
+
+// delete single specific record
 $bean = ORM::get('foo', $_GET['id']);
 F::error(ORM::error(), $bean === false);
-
 $deleted = ORM::delete($bean);
 F::error(ORM::error(), $deleted === false);
-
 echo 'Record deleted successfully';
+
+// delete multiple records by criteria
+$deleted = ORM::query('DELETE foo WHERE disabled = ? ', array(0));
+F::error(ORM::error(), $deleted === false);
+echo 'Records deleted successfully';
 ```
 
 
@@ -178,13 +205,11 @@ echo 'Record deleted successfully';
 ## Methods
 
 #### ORM::all ( $beanType, $order="ORDER BY id" )
+Get all records of a table (default sort by id)
 
 ##### Parameters
 ```
 <fusedoc>
-	<description>
-		get all records (default sort by id)
-	</description>
 	<io>
 		<in>
 			<string name="$beanType" />
@@ -201,10 +226,24 @@ echo 'Record deleted successfully';
 
 ##### Example
 ```
+<?php
+// load library
+require_once '/path/to/ORM.php';
+define('FUESBOXY_ORM_DB', [ ... ]);
+
+// get data
+$beans = ORM::all('foo', 'ORDER BY datetime DESC');
+if ( $beans === false ) die(ORM::error());
+
+// display result
+foreach ( $beans as $id => $item ) var_dump($item);
+
 ```
 
 
 #### ORM::columns ( $beanType )
+Get columns of specific table
+
 
 ##### Parameters
 ```
@@ -227,17 +266,27 @@ echo 'Record deleted successfully';
 
 ##### Example
 ```
+<?php
+// load library
+require_once '/path/to/ORM.php';
+define('FUESBOXY_ORM_DB', [ ... ]);
+
+// get data
+$beans = ORM::all('foo', 'ORDER BY datetime DESC');
+if ( $beans === false ) die(ORM::error());
+
+// display result
+foreach ( $beans as $id => $item ) var_dump($item);
+
 ```
 
 
 #### ORM::count ( $beanType, $filter="", $param=[] )
+Count number of records according to specified criteria (if any)
 
 ##### Parameters
 ```
 <fusedoc>
-	<description>
-		count number of records accorrding to criteria (if any)
-	</description>
 	<io>
 		<in>
 			<string name="$beanType" />
@@ -446,17 +495,7 @@ Alias of `ORM::query` method
 
 ##### Example
 ```
-<?php
-// create new object and then save
-$bean_1 = ORM::new('foo', [ 'category' => 'aaaaa', 'seq' => 10 ]);
-$id = ORM::save($bean_1);
-F::error(ORM::error(), $id === false);
-var_dump($id);
 
-// save new record right away
-$bean_2 = ORM::saveNew('foo', [ 'category' => 'bbbbb', 'seq' => 999 ]);
-F::error(ORM::error(), $bean_2 === false);
-var_dump($bean_2);
 ```
 
 
