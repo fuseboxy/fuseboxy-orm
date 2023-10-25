@@ -7,6 +7,23 @@ Keep your SQL to a minimum
 ----------------------------------------------------------------------------------------------------
 
 
+## ORM Libraries
+
+#### RedBeanPHP (5.7.x)
+
+* Third-party library (which has limitation of underscore on table name)
+* https://redbeanphp.com/
+
+
+#### Generic
+
+* Own library (which do not have limitation on table name)
+* Basic CRUD operations only
+
+
+----------------------------------------------------------------------------------------------------
+
+
 ## Installation
 
 #### Install By Composer
@@ -96,23 +113,6 @@ define('FUSEBOXY_ORM_DB', [
 	'password' => 'password',
 ]);
 ```
-
-
-----------------------------------------------------------------------------------------------------
-
-
-## ORM Libraries
-
-#### RedBeanPHP (5.7.x)
-
-* Third-party library (which has limitation of underscore on table name)
-* https://redbeanphp.com/
-
-
-#### Generic
-
-* Own library (which do not have limitation on table name)
-* Basic CRUD operations only
 
 
 ----------------------------------------------------------------------------------------------------
