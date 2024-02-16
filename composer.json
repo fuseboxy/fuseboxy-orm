@@ -3,6 +3,12 @@
 	"description": "Fuseboxy ORM - Keep your SQL to a minimum",
 	"license": "MIT",
 	"type": "fuseboxy-module",
-	"require": { "fuseboxy/fuseboxy-installer": "2.2.x" },
-	"autoload": { "files": [ "app/model/Bean.php", "app/model/ORM.php" ] }
+	"require": {
+		"fuseboxy/fuseboxy-installer": "1.*"
+	},
+	"autoload": {
+		"files": [
+			"app/model/ORM.php"
+		]
+	}
 }
